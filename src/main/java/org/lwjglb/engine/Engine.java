@@ -5,7 +5,7 @@ import org.lwjglb.engine.scene.Scene;
 
 public class Engine {
 
-    public static final int TARGET_UPS = 90;
+    public static final int TARGET_UPS = 60;
     private final IAppLogic appLogic;
     private final Window window;
     private Render render;
@@ -55,6 +55,11 @@ public class Engine {
             deltaFps += (now - initialTime) / timeR;
 
             if (targetFps <= 0 || deltaFps >= 1) {
+                window.getMouseInput().input();
+                appLogic.input(window, scene, now - initialTime);
+            }
+
+            if (targetFps <= 0 || deltaFps >= 1) {
                 appLogic.input(window, scene, now - initialTime);
             }
 
@@ -72,7 +77,6 @@ public class Engine {
             }
             initialTime = now;
         }
-
         cleanup();
     }
 

@@ -18,6 +18,8 @@ public class Window {
     private Callable<Void> resizeFunc;
     private int width;
 
+    private MouseInput mouseInput;
+
     public Window(String title, WindowOptions opts, Callable<Void> resizeFunc) {
         this.resizeFunc = resizeFunc;
         if (!glfwInit()) {
@@ -77,6 +79,8 @@ public class Window {
         glfwGetFramebufferSize(windowHandle, arrWidth, arrHeight);
         width = arrWidth[0];
         height = arrHeight[0];
+
+        mouseInput = new MouseInput(windowHandle);
     }
 
     public void cleanup() {
@@ -133,9 +137,13 @@ public class Window {
         return glfwWindowShouldClose(windowHandle);
     }
 
+    public MouseInput getMouseInput() {
+        return mouseInput;
+    }
+
     public static class WindowOptions {
         public boolean compatibleProfile;
-        public int fps;
+        public int fps = 90;
         public int height;
         public int ups = Engine.TARGET_UPS;
         public int width;
