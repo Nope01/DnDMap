@@ -5,7 +5,7 @@ import org.lwjglb.engine.scene.Scene;
 
 public class Engine {
 
-    public static final int TARGET_UPS = 30;
+    public static final int TARGET_UPS = 90;
     private final IAppLogic appLogic;
     private final Window window;
     private Render render;
