@@ -32,6 +32,7 @@ public class SceneRender {
         uniformsMap.createUniform("viewMatrix");
         uniformsMap.createUniform("modelMatrix");
         uniformsMap.createUniform("txtSampler");
+        uniformsMap.createUniform("material.diffuse");
     }
 
     public void render(Scene scene) {
@@ -45,6 +46,10 @@ public class SceneRender {
         TextureCache textureCache = scene.getTextureCache();
         for (Model model : models) {
             List<Entity> entities = model.getEntitiesList();
+
+            for (Material material : model.getMaterialList()) {
+                uniformsMap.setUniform("material.diffuse", material.getDiffuseColor());
+            }
 
             for (Material material : model.getMaterialList()) {
                 Texture texture = textureCache.getTexture(material.getTexturePath());
