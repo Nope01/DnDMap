@@ -19,6 +19,14 @@ public class Material {
     public Material() {
         diffuseColor = DEFAULT_COLOR;
         ambientColor = DEFAULT_COLOR;
+        specularColor = DEFAULT_COLOR;
+        meshList = new ArrayList<>();
+    }
+
+    public Material(Vector4f color) {
+        diffuseColor = color;
+        ambientColor = color;
+        specularColor = color;
         meshList = new ArrayList<>();
     }
 

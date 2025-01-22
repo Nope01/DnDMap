@@ -14,9 +14,48 @@ public class Mesh {
     private int vaoId;
     private List<Integer> vboIdList;
 
-    public Mesh(float[] positions, float[] indices) {
+    public Mesh(float[] positions, float[] normals, int[] indices) {
+        numVertices = indices.length;
+        vboIdList = new ArrayList<>();
 
+        vaoId = glGenVertexArrays();
+        glBindVertexArray(vaoId);
+
+        // Positions VBO
+        int vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        FloatBuffer positionsBuffer = MemoryUtil.memCallocFloat(positions.length);
+        positionsBuffer.put(0, positions);
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, positionsBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
+        // Normals VBO
+        vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        FloatBuffer normalsBuffer = MemoryUtil.memCallocFloat(normals.length);
+        normalsBuffer.put(0, normals);
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, normalsBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+
+        // Index VBO
+        vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
+        indicesBuffer.put(0, indices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        MemoryUtil.memFree(positionsBuffer);
+        MemoryUtil.memFree(indicesBuffer);
     }
+
     public Mesh(float[] positions, float[] normals, float[] textCoords, int[] indices) {
         numVertices = indices.length;
         vboIdList = new ArrayList<>();

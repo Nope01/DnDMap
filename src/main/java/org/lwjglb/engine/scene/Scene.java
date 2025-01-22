@@ -1,5 +1,6 @@
 package org.lwjglb.engine.scene;
 
+import org.joml.Vector3f;
 import org.lwjglb.engine.IGuiInstance;
 import org.lwjglb.engine.graph.Model;
 import org.lwjglb.engine.graph.TextureCache;

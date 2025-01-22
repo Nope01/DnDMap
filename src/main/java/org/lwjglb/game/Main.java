@@ -27,9 +27,12 @@ public class Main implements IAppLogic, IGuiInstance {
     private static final float MOVEMENT_SPEED = 0.005f;
 
     private Entity cubeEntity;
+    private Entity planeEntity;
+
     private Vector4f displInc = new Vector4f();
     private float rotation;
     private LightControls lightControls;
+
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -44,14 +47,55 @@ public class Main implements IAppLogic, IGuiInstance {
 
     @Override
     public void init(Window window, Scene scene, Render render) {
+        Camera camera = scene.getCamera();
+        camera.setPosition(0.0f, 1.0f, 3.0f);
+
         Model cubeModel = ModelLoader.loadModel("cube-model", "resources/models/cube/cube.obj",
                 scene.getTextureCache());
         scene.addModel(cubeModel);
 
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
-        cubeEntity.setPosition(0, 0f, -2);
+        cubeEntity.setPosition(0, 1, 0);
         cubeEntity.updateModelMatrix();
         scene.addEntity(cubeEntity);
+
+        float[] planeVertices = new float[] {
+                -1.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, -1.0f,
+                -1.0f, 0.0f, -1.0f,
+        };
+
+        float[] planeNormals = new float[] {
+                0.0f, 1.0f, 0.0f,
+                0.0f, 1.0f, 0.0f,
+                0.0f, 1.0f, 0.0f,
+                0.0f, 1.0f, 0.0f,
+        };
+
+        int[] planeIndices = new int[]{
+                0, 1, 2,
+                2, 3, 0,
+        };
+
+        Vector4f color = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
+        Texture planeTexture = scene.getTextureCache().createTexture("resources/models/default/default_texture.png");
+        Material planeMaterial = new Material(color);
+        planeMaterial.setTexturePath(planeTexture.getTexturePath());
+        List<Material> materialList = new ArrayList<>();
+        materialList.add(planeMaterial);
+
+        Mesh planeMesh = new Mesh(planeVertices, planeNormals, planeIndices);
+        planeMaterial.getMeshList().add(planeMesh);
+        Model planeModel = new Model("plane-model", materialList);
+        scene.addModel(planeModel);
+
+        planeEntity = new Entity("plane-entity", planeModel.getId());
+        planeEntity.setPosition(0, -1, 0);
+        planeEntity.setScale(10.0f);
+        planeEntity.updateModelMatrix();
+        scene.addEntity(planeEntity);
+
 
         SceneLights sceneLights = new SceneLights();
         sceneLights.getAmbientLight().setIntensity(0.3f);
