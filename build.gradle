@@ -32,6 +32,9 @@ dependencies {
     implementation "org.lwjgl:lwjgl-assimp:$lwjglVersion"
     runtimeOnly "org.lwjgl:lwjgl-assimp:$lwjglVersion"
 
+    implementation 'io.github.spair:imgui-java-binding:1.87.7'
+    runtimeOnly 'io.github.spair:imgui-java-natives-windows:1.87.7'
+
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"
     implementation "org.lwjgl:lwjgl-bgfx"
