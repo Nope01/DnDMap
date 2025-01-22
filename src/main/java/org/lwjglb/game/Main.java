@@ -12,6 +12,9 @@ import org.lwjglb.engine.scene.Camera;
 import org.lwjglb.engine.scene.Entity;
 import org.lwjglb.engine.scene.ModelLoader;
 import org.lwjglb.engine.scene.Scene;
+import org.lwjglb.engine.scene.lights.PointLight;
+import org.lwjglb.engine.scene.lights.SceneLights;
+import org.lwjglb.engine.scene.lights.SpotLight;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,7 @@ public class Main implements IAppLogic, IGuiInstance {
     private Entity cubeEntity;
     private Vector4f displInc = new Vector4f();
     private float rotation;
+    private LightControls lightControls;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -40,17 +44,27 @@ public class Main implements IAppLogic, IGuiInstance {
 
     @Override
     public void init(Window window, Scene scene, Render render) {
-
-        //Model
         Model cubeModel = ModelLoader.loadModel("cube-model", "resources/models/cube/cube.obj",
                 scene.getTextureCache());
         scene.addModel(cubeModel);
 
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
-        cubeEntity.setPosition(0, 0, -2);
+        cubeEntity.setPosition(0, 0f, -2);
+        cubeEntity.updateModelMatrix();
         scene.addEntity(cubeEntity);
 
-        scene.setGuiInstance(this);
+        SceneLights sceneLights = new SceneLights();
+        sceneLights.getAmbientLight().setIntensity(0.3f);
+        scene.setSceneLights(sceneLights);
+        sceneLights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1),
+                new Vector3f(0, 0, -1.4f), 1.0f));
+
+        Vector3f coneDir = new Vector3f(0, 0, -1);
+        sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1),
+                new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
+
+        lightControls = new LightControls(scene);
+        scene.setGuiInstance(lightControls);
     }
 
 
@@ -100,7 +114,6 @@ public class Main implements IAppLogic, IGuiInstance {
     public void drawGui() {
         ImGui.newFrame();
         ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
-        ImGui.showDemoWindow();
         ImGui.endFrame();
         ImGui.render();
     }
