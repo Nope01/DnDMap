@@ -97,7 +97,7 @@ public class Main implements IAppLogic, IGuiInstance {
         hexEntity = new Entity("hex-entity", hexModel.getId());
         hexEntity.setPosition(1, 1, 0);
         hexEntity.updateModelMatrix();
-        //scene.addEntity(hexEntity);
+        scene.addEntity(hexEntity);
 
         //Lights
         SceneLights sceneLights = new SceneLights();
@@ -146,7 +146,6 @@ public class Main implements IAppLogic, IGuiInstance {
         }
 
         if (mouseInput.isLeftButtonPressed()) {
-            scene.addEntity(hexEntity);
         }
 
         if (inputConsumed) {
@@ -156,7 +155,7 @@ public class Main implements IAppLogic, IGuiInstance {
 
     @Override
     public void update(Window window, Scene scene, long diffTimeMillis) {
-
+        hexEntity.updateModelMatrix();
     }
 
     @Override
