@@ -18,6 +18,18 @@ public class ModelLoader {
         // Utility class
     }
 
+    //Personal models made manually
+    public static Model loadModel(String modelId, float[] vertices, float[] normals, int[] indices, Texture texture, Material material) {
+        material.setTexturePath(texture.getTexturePath());
+        List<Material> materialList = new ArrayList<>();
+        materialList.add(material);
+
+        Mesh mesh = new Mesh(vertices, normals, indices);
+        material.getMeshList().add(mesh);
+        return new Model(modelId, materialList);
+    }
+
+    //Imported .obj models
     public static Model loadModel(String modelId, String modelPath, TextureCache textureCache) {
         return loadModel(modelId, modelPath, textureCache, aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
                 aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights |
@@ -33,6 +45,7 @@ public class ModelLoader {
         String modelDir = file.getParent();
 
         AIScene aiScene = aiImportFile(modelPath, flags);
+
         if (aiScene == null) {
             throw new RuntimeException("Error loading model [modelPath: " + modelPath + "]");
         }
@@ -144,6 +157,12 @@ public class ModelLoader {
 
     private static float[] processNormals(AIMesh aiMesh) {
         AIVector3D.Buffer buffer = aiMesh.mNormals();
+        if (buffer == null) {
+            System.out.println("Buffer is null");
+        }
+        System.out.println(buffer.toString());
+        System.out.println(buffer.x());
+
         float[] data = new float[buffer.remaining() * 3];
         int pos = 0;
         while (buffer.remaining() > 0) {

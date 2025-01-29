@@ -6,6 +6,8 @@ import imgui.flag.ImGuiCond;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjglb.assets.Hexagon;
+import org.lwjglb.assets.Plane;
 import org.lwjglb.engine.*;
 import org.lwjglb.engine.graph.*;
 import org.lwjglb.engine.scene.Camera;
@@ -27,7 +29,10 @@ public class Main implements IAppLogic, IGuiInstance {
     private static final float MOVEMENT_SPEED = 0.005f;
 
     private Entity cubeEntity;
+    private Entity treeEntity;
     private Entity planeEntity;
+    private Entity hexEntity;
+    private Entity[] entities;
 
     private Vector4f displInc = new Vector4f();
     private float rotation;
@@ -50,6 +55,7 @@ public class Main implements IAppLogic, IGuiInstance {
         Camera camera = scene.getCamera();
         camera.setPosition(0.0f, 1.0f, 3.0f);
 
+        //Cube
         Model cubeModel = ModelLoader.loadModel("cube-model", "resources/models/cube/cube.obj",
                 scene.getTextureCache());
         scene.addModel(cubeModel);
@@ -57,37 +63,24 @@ public class Main implements IAppLogic, IGuiInstance {
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
         cubeEntity.setPosition(0, 1, 0);
         cubeEntity.updateModelMatrix();
-        scene.addEntity(cubeEntity);
+        //scene.addEntity(cubeEntity);
 
-        float[] planeVertices = new float[] {
-                -1.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, -1.0f,
-                -1.0f, 0.0f, -1.0f,
-        };
+        //Tree
+        Model treeModel = ModelLoader.loadModel("tree-model", "resources/models/tree/tree.obj",
+                scene.getTextureCache());
+        scene.addModel(treeModel);
 
-        float[] planeNormals = new float[] {
-                0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-        };
+        treeEntity = new Entity("tree-entity", treeModel.getId());
+        treeEntity.setPosition(1, 0, 1);
+        treeEntity.setScale(0.1f);
+        treeEntity.updateModelMatrix();
+        //scene.addEntity(treeEntity);
 
-        int[] planeIndices = new int[]{
-                0, 1, 2,
-                2, 3, 0,
-        };
-
+        //Plane
         Vector4f color = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
         Texture planeTexture = scene.getTextureCache().createTexture("resources/models/default/default_texture.png");
         Material planeMaterial = new Material(color);
-        planeMaterial.setTexturePath(planeTexture.getTexturePath());
-        List<Material> materialList = new ArrayList<>();
-        materialList.add(planeMaterial);
-
-        Mesh planeMesh = new Mesh(planeVertices, planeNormals, planeIndices);
-        planeMaterial.getMeshList().add(planeMesh);
-        Model planeModel = new Model("plane-model", materialList);
+        Model planeModel = Plane.createModel(new Plane("plane-model", planeTexture, planeMaterial));
         scene.addModel(planeModel);
 
         planeEntity = new Entity("plane-entity", planeModel.getId());
@@ -96,7 +89,19 @@ public class Main implements IAppLogic, IGuiInstance {
         planeEntity.updateModelMatrix();
         scene.addEntity(planeEntity);
 
+        //Hexagon
+        color = new Vector4f(1.0f, 0.0f, 0.0f, 1.0f);
+        Texture hexTexture = scene.getTextureCache().createTexture("resources/models/default/default_texture.png");
+        Material hexMaterial = new Material(color);
+        Model hexModel = Hexagon.createModel(new Hexagon("hex-model", hexTexture, hexMaterial));
+        scene.addModel(hexModel);
 
+        hexEntity = new Entity("hex-entity", hexModel.getId());
+        hexEntity.setPosition(1, 1, 0);
+        hexEntity.updateModelMatrix();
+        //scene.addEntity(hexEntity);
+
+        //Lights
         SceneLights sceneLights = new SceneLights();
         sceneLights.getAmbientLight().setIntensity(0.3f);
         scene.setSceneLights(sceneLights);
@@ -139,6 +144,10 @@ public class Main implements IAppLogic, IGuiInstance {
                     (float) Math.toRadians(-displVec.y * MOUSE_SENSITIVITY));
         }
 
+        if (mouseInput.isLeftButtonPressed()) {
+            scene.addEntity(hexEntity);
+        }
+
         if (inputConsumed) {
             return;
         }
@@ -146,12 +155,7 @@ public class Main implements IAppLogic, IGuiInstance {
 
     @Override
     public void update(Window window, Scene scene, long diffTimeMillis) {
-        rotation += 1.5;
-        if (rotation > 360) {
-            rotation = 0;
-        }
-        cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-        cubeEntity.updateModelMatrix();
+
     }
 
     @Override
