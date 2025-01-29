@@ -6,25 +6,40 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseInput {
 
-    private Vector2f currentPos;
+    private Vector2f mousePos;
     private Vector2f displVec;
     private boolean inWindow;
     private boolean leftButtonPressed;
     private Vector2f previousPos;
     private boolean rightButtonPressed;
+    private Vector2f windowSize;
+    private Vector2f viewPos;
 
-    public MouseInput(long windowHandle) {
+    public MouseInput(Window window, long windowHandle) {
         previousPos = new Vector2f(-1, -1);
-        currentPos = new Vector2f();
+        mousePos = new Vector2f();
         displVec = new Vector2f();
+        windowSize = new Vector2f();
+        viewPos = new Vector2f();
         leftButtonPressed = false;
         rightButtonPressed = false;
         inWindow = false;
 
         glfwSetCursorPosCallback(windowHandle, (handle, xpos, ypos) -> {
-            currentPos.x = (float) xpos;
-            currentPos.y = (float) ypos;
+            mousePos.x = (float) xpos;
+            mousePos.y = (float) ypos;
         });
+
+        //Init the values
+        windowSize.x = (float) window.getWidth();
+        windowSize.y = (float) window.getHeight();
+
+        //Update when resizing
+        glfwSetWindowSizeCallback(windowHandle, (handle, width, height) -> {
+            windowSize.x = (float) width;
+            windowSize.y = (float) height;
+        });
+
         glfwSetCursorEnterCallback(windowHandle, (handle, entered) -> inWindow = entered);
         glfwSetMouseButtonCallback(windowHandle, (handle, button, action, mode) -> {
             leftButtonPressed = button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS;
@@ -32,8 +47,16 @@ public class MouseInput {
         });
     }
 
-    public Vector2f getCurrentPos() {
-        return currentPos;
+    public Vector2f getMousePos() {
+        return mousePos;
+    }
+
+    public Vector2f getWindowSize() {
+        return windowSize;
+    }
+
+    public Vector2f getViewPos() {
+        return viewPos;
     }
 
     public Vector2f getDisplVec() {
@@ -44,8 +67,8 @@ public class MouseInput {
         displVec.x = 0;
         displVec.y = 0;
         if (previousPos.x > 0 && previousPos.y > 0 && inWindow) {
-            double deltax = currentPos.x - previousPos.x;
-            double deltay = currentPos.y - previousPos.y;
+            double deltax = mousePos.x - previousPos.x;
+            double deltay = mousePos.y - previousPos.y;
             boolean rotateX = deltax != 0;
             boolean rotateY = deltay != 0;
             if (rotateX) {
@@ -55,8 +78,11 @@ public class MouseInput {
                 displVec.x = (float) deltay;
             }
         }
-        previousPos.x = currentPos.x;
-        previousPos.y = currentPos.y;
+        previousPos.x = mousePos.x;
+        previousPos.y = mousePos.y;
+
+        viewPos.x = (2*(mousePos.x - 0)/(windowSize.x - 0))-1;
+        viewPos.y = -(2*(mousePos.y - 0)/(windowSize.y - 0))+1;
     }
 
     public boolean isLeftButtonPressed() {

@@ -80,7 +80,7 @@ public class Window {
         width = arrWidth[0];
         height = arrHeight[0];
 
-        mouseInput = new MouseInput(windowHandle);
+        mouseInput = new MouseInput(this, windowHandle);
     }
 
     public void cleanup() {

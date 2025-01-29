@@ -18,9 +18,6 @@ import org.lwjglb.engine.scene.lights.PointLight;
 import org.lwjglb.engine.scene.lights.SceneLights;
 import org.lwjglb.engine.scene.lights.SpotLight;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Main implements IAppLogic, IGuiInstance {
@@ -32,11 +29,12 @@ public class Main implements IAppLogic, IGuiInstance {
     private Entity treeEntity;
     private Entity planeEntity;
     private Entity hexEntity;
-    private Entity[] entities;
 
     private Vector4f displInc = new Vector4f();
     private float rotation;
     private LightControls lightControls;
+
+    private MouseDisplay mouseDisplay;
 
 
     public static void main(String[] args) {
@@ -114,6 +112,9 @@ public class Main implements IAppLogic, IGuiInstance {
 
         lightControls = new LightControls(scene);
         scene.setGuiInstance(lightControls);
+
+        mouseDisplay = new MouseDisplay(scene);
+        scene.setGuiInstance(mouseDisplay);
     }
 
 
@@ -170,7 +171,7 @@ public class Main implements IAppLogic, IGuiInstance {
     public boolean handleGuiInput(Scene scene, Window window) {
         ImGuiIO imGuiIO = ImGui.getIO();
         MouseInput mouseInput = window.getMouseInput();
-        Vector2f mousePos = mouseInput.getCurrentPos();
+        Vector2f mousePos = mouseInput.getMousePos();
         imGuiIO.addMousePosEvent(mousePos.x, mousePos.y);
         imGuiIO.addMouseButtonEvent(0, mouseInput.isLeftButtonPressed());
         imGuiIO.addMouseButtonEvent(1, mouseInput.isRightButtonPressed());

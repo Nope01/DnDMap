@@ -123,7 +123,7 @@ public class LightControls implements IGuiInstance {
     public boolean handleGuiInput(Scene scene, Window window) {
         ImGuiIO imGuiIO = ImGui.getIO();
         MouseInput mouseInput = window.getMouseInput();
-        Vector2f mousePos = mouseInput.getCurrentPos();
+        Vector2f mousePos = mouseInput.getMousePos();
         imGuiIO.addMousePosEvent(mousePos.x, mousePos.y);
         imGuiIO.addMouseButtonEvent(0, mouseInput.isLeftButtonPressed());
         imGuiIO.addMouseButtonEvent(1, mouseInput.isRightButtonPressed());

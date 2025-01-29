@@ -24,9 +24,9 @@ public class Hexagon {
         vertices = new float[7 * 3];
         Vector3f[] vecs = new Vector3f[7];
 
+        //Rotates a point to create a circle with 6 points (hexagon)
         vecs[0] = new Vector3f(0, 0, 0);
         Matrix3f rotation = new Matrix3f();
-
         for (int i = 0; i < 6; i++) {
             float angle = (float) (TAU/6);
             rotation.rotationZ(angle*i);
