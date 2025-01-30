@@ -25,8 +25,9 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Main implements IAppLogic, IGuiInstance {
 
-    private static final float MOUSE_SENSITIVITY = 0.1f;
-    private static final float MOVEMENT_SPEED = 0.005f;
+    private static final float MOUSE_SENSITIVITY = 0.08f;
+    private static final float MOVEMENT_SPEED = 0.02f;
+    private static final float PAN_SPEED = 0.005f;
 
     private Entity cubeEntity;
     private Entity treeEntity;
@@ -55,7 +56,7 @@ public class Main implements IAppLogic, IGuiInstance {
     @Override
     public void init(Window window, Scene scene, Render render) {
         Camera camera = scene.getCamera();
-        camera.setPosition(0.0f, 1.0f, 3.0f);
+        camera.setPosition(0.0f, 1.0f, 4.0f);
 
         //Cube
         Model cubeModel = ModelLoader.loadModel("cube-model", "resources/models/cube/cube.obj",
@@ -86,7 +87,7 @@ public class Main implements IAppLogic, IGuiInstance {
         scene.addModel(planeModel);
 
         planeEntity = new Entity("plane-entity", planeModel.getId());
-        planeEntity.setPosition(0, -1, 0);
+        planeEntity.setPosition(0, 0, 0);
         planeEntity.setScale(10.0f);
         planeEntity.updateModelMatrix();
         scene.addEntity(planeEntity);
@@ -99,7 +100,7 @@ public class Main implements IAppLogic, IGuiInstance {
         scene.addModel(hexModel);
 
         hexEntity = new Entity("hex-entity", hexModel.getId());
-        hexEntity.setPosition(1, 1, 0);
+        hexEntity.setPosition(0, 1, 0);
         hexEntity.updateModelMatrix();
         scene.addEntity(hexEntity);
 
@@ -108,7 +109,7 @@ public class Main implements IAppLogic, IGuiInstance {
         sceneLights.getAmbientLight().setIntensity(0.3f);
         scene.setSceneLights(sceneLights);
         sceneLights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1),
-                new Vector3f(0, 0, -1.4f), 1.0f));
+                new Vector3f(0, 1, 1.4f), 1.0f));
 
         Vector3f coneDir = new Vector3f(0, 0, -1);
         sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1),
@@ -123,6 +124,7 @@ public class Main implements IAppLogic, IGuiInstance {
     public void input(Window window, Scene scene, long diffTimeMillis, boolean inputConsumed) {
         float move = diffTimeMillis * MOVEMENT_SPEED;
         Camera camera = scene.getCamera();
+
         if (window.isKeyPressed(GLFW_KEY_W)) {
             camera.moveForward(move);
         } else if (window.isKeyPressed(GLFW_KEY_S)) {
@@ -133,17 +135,21 @@ public class Main implements IAppLogic, IGuiInstance {
         } else if (window.isKeyPressed(GLFW_KEY_D)) {
             camera.moveRight(move);
         }
-        if (window.isKeyPressed(GLFW_KEY_UP)) {
+        if (window.isKeyPressed(GLFW_KEY_Q)) {
             camera.moveUp(move);
-        } else if (window.isKeyPressed(GLFW_KEY_DOWN)) {
+        } else if (window.isKeyPressed(GLFW_KEY_E)) {
             camera.moveDown(move);
         }
 
         MouseInput mouseInput = window.getMouseInput();
         if (mouseInput.isRightButtonPressed()) {
             Vector2f displVec = mouseInput.getDisplVec();
-            camera.addRotation((float) Math.toRadians(-displVec.x * MOUSE_SENSITIVITY),
-                    (float) Math.toRadians(-displVec.y * MOUSE_SENSITIVITY));
+            camera.addRotation((float) Math.toRadians(displVec.x * MOUSE_SENSITIVITY),
+                    (float) Math.toRadians(displVec.y * MOUSE_SENSITIVITY));
+        }
+        if (mouseInput.isMiddleButtonPressed()) {
+            Vector2f displVec = mouseInput.getDisplVec();
+            camera.addPosition(displVec.x * PAN_SPEED, displVec.y * PAN_SPEED);
         }
 
         if (mouseInput.isLeftButtonPressed()) {

@@ -10,8 +10,9 @@ public class MouseInput {
     private Vector2f displVec;
     private boolean inWindow;
     private boolean leftButtonPressed;
-    private Vector2f previousPos;
     private boolean rightButtonPressed;
+    private boolean middleButtonPressed;
+    private Vector2f previousPos;
     private Vector2f windowSize;
     private Vector2f viewPos;
 
@@ -23,6 +24,7 @@ public class MouseInput {
         viewPos = new Vector2f();
         leftButtonPressed = false;
         rightButtonPressed = false;
+        middleButtonPressed = false;
         inWindow = false;
 
         glfwSetCursorPosCallback(windowHandle, (handle, xpos, ypos) -> {
@@ -44,6 +46,7 @@ public class MouseInput {
         glfwSetMouseButtonCallback(windowHandle, (handle, button, action, mode) -> {
             leftButtonPressed = button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS;
             rightButtonPressed = button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS;
+            middleButtonPressed = button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS;
         });
     }
 
@@ -91,5 +94,9 @@ public class MouseInput {
 
     public boolean isRightButtonPressed() {
         return rightButtonPressed;
+    }
+
+    public boolean isMiddleButtonPressed() {
+        return middleButtonPressed;
     }
 }

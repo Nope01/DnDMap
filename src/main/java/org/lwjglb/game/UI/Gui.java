@@ -14,7 +14,7 @@ public class Gui implements IGuiInstance {
     private Menu menu;
 
     public Gui(Scene scene) {
-        ImGui.getIO().setFontGlobalScale(2f);
+        ImGui.getIO().setFontGlobalScale(1.5f);
         mouseDisplay = new MouseDisplay(scene);
         lightControls = new LightControls(scene);
         menu = new Menu(scene);
@@ -27,11 +27,11 @@ public class Gui implements IGuiInstance {
         //For enabling resizing
         if (firstFrame) {
             ImGui.setNextWindowPos(0, 100, ImGuiCond.Always);
-            ImGui.setNextWindowSize(450, 400);
+            ImGui.setNextWindowSize(550, 400);
             mouseDisplay.drawGui();
 
             ImGui.setNextWindowPos(0, 500, ImGuiCond.Always);
-            ImGui.setNextWindowSize(450, 400);
+            ImGui.setNextWindowSize(550, 400);
             lightControls.drawGui();
 
             ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);

@@ -16,6 +16,7 @@ public class MouseDisplay implements IGuiInstance {
     private Vector2f mousePos;
     private Vector2f viewPos;
     private Vector2f resolution;
+    private Vector2f displVec;
 
     private float[] posX;
     private float[] posY;
@@ -25,6 +26,7 @@ public class MouseDisplay implements IGuiInstance {
         mousePos = new Vector2f();
         viewPos = new Vector2f();
         resolution = new Vector2f();
+        displVec = new Vector2f();
 
         Model model = scene.getModelMap().get("hex-model");
         Vector3f pos = model.getEntitiesList().getFirst().getPosition();
@@ -41,8 +43,8 @@ public class MouseDisplay implements IGuiInstance {
         ImGui.button(String.valueOf("Y:" + viewPos.y()));
         ImGui.separator();
         ImGui.text("Screen coords");
-        ImGui.button(String.valueOf("X:" + mousePos.x()));
-        ImGui.button(String.valueOf("Y:" + mousePos.y()));
+        ImGui.button(String.valueOf("X:" + displVec.x()));
+        ImGui.button(String.valueOf("Y:" + displVec.y()));
         ImGui.separator();
         ImGui.text("Model manipulation");
         ImGui.sliderFloat("Pos - x", posX, -3.0f, 3.0f, "%.2f");
@@ -57,6 +59,7 @@ public class MouseDisplay implements IGuiInstance {
         ImGuiIO imGuiIO = ImGui.getIO();
         MouseInput mouseInput = window.getMouseInput();
         Vector2f mousePos = mouseInput.getMousePos();
+        Vector2f displVec = mouseInput.getDisplVec();
         imGuiIO.addMousePosEvent(mousePos.x, mousePos.y);
         imGuiIO.addMouseButtonEvent(0, mouseInput.isLeftButtonPressed());
         imGuiIO.addMouseButtonEvent(1, mouseInput.isRightButtonPressed());
@@ -66,6 +69,7 @@ public class MouseDisplay implements IGuiInstance {
             this.mousePos = mousePos;
             this.resolution = mouseInput.getWindowSize();
             this.viewPos = mouseInput.getViewPos();
+            this.displVec = mouseInput.getDisplVec();
 
             Model model = scene.getModelMap().get("hex-model");
             model.getEntitiesList().getFirst().setPosition(posX[0], posY[0], posZ[0]);

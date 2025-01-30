@@ -25,6 +25,13 @@ public class Camera {
         recalculate();
     }
 
+    //For panning, uses rotational displVec so is not labelled correctly for x and y axis
+    public void addPosition(float x, float y) {
+        moveUp(x);
+        moveLeft(y);
+        recalculate();
+    }
+
     public Vector3f getPosition() {
         return position;
     }
