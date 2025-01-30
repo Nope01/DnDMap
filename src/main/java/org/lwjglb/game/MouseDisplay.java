@@ -34,21 +34,24 @@ public class MouseDisplay implements IGuiInstance {
 
     @Override
     public void drawGui() {
-        ImGui.newFrame();
         ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
         ImGui.setNextWindowSize(450, 400);
 
         ImGui.begin("Mouse Display");
+        ImGui.text("View coords");
         ImGui.button(String.valueOf("X:" + viewPos.x()));
         ImGui.button(String.valueOf("Y:" + viewPos.y()));
         ImGui.separator();
+        ImGui.text("Screen coords");
+        ImGui.button(String.valueOf("X:" + mousePos.x()));
+        ImGui.button(String.valueOf("Y:" + mousePos.y()));
+        ImGui.separator();
+        ImGui.text("Model manipulation");
         ImGui.sliderFloat("Pos - x", posX, -3.0f, 3.0f, "%.2f");
         ImGui.sliderFloat("Pos - y", posY, -3.0f, 3.0f, "%.2f");
         ImGui.sliderFloat("Pos - z", posZ, -3.0f, 3.0f, "%.2f");
 
         ImGui.end();
-        ImGui.endFrame();
-        ImGui.render();
     }
 
     @Override

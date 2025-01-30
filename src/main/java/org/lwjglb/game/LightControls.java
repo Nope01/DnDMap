@@ -75,8 +75,7 @@ public class LightControls implements IGuiInstance {
 
     @Override
     public void drawGui() {
-        ImGui.newFrame();
-        ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
+        ImGui.setNextWindowPos(0, 400, ImGuiCond.Always);
         ImGui.setNextWindowSize(450, 400);
 
         ImGui.begin("Lights controls");
@@ -115,8 +114,6 @@ public class LightControls implements IGuiInstance {
         }
 
         ImGui.end();
-        ImGui.endFrame();
-        ImGui.render();
     }
 
     @Override

@@ -33,8 +33,9 @@ public class Main implements IAppLogic, IGuiInstance {
     private Vector4f displInc = new Vector4f();
     private float rotation;
     private LightControls lightControls;
-
     private MouseDisplay mouseDisplay;
+    private Gui gui;
+
 
 
     public static void main(String[] args) {
@@ -110,11 +111,8 @@ public class Main implements IAppLogic, IGuiInstance {
         sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1),
                 new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
 
-        lightControls = new LightControls(scene);
-        scene.setGuiInstance(lightControls);
-
-        mouseDisplay = new MouseDisplay(scene);
-        scene.setGuiInstance(mouseDisplay);
+        gui = new Gui(scene);
+        scene.setGuiInstance(gui);
     }
 
 
