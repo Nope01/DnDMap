@@ -1,4 +1,4 @@
-package org.lwjglb.game;
+package org.lwjglb.game.UI;
 
 import imgui.*;
 import imgui.flag.ImGuiCond;
@@ -75,9 +75,6 @@ public class LightControls implements IGuiInstance {
 
     @Override
     public void drawGui() {
-        ImGui.setNextWindowPos(0, 400, ImGuiCond.Always);
-        ImGui.setNextWindowSize(450, 400);
-
         ImGui.begin("Lights controls");
         if (ImGui.collapsingHeader("Ambient Light")) {
             ImGui.sliderFloat("Ambient factor", ambientFactor, 0.0f, 1.0f, "%.2f");

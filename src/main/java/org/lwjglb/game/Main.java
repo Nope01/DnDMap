@@ -17,6 +17,9 @@ import org.lwjglb.engine.scene.Scene;
 import org.lwjglb.engine.scene.lights.PointLight;
 import org.lwjglb.engine.scene.lights.SceneLights;
 import org.lwjglb.engine.scene.lights.SpotLight;
+import org.lwjglb.game.UI.Gui;
+import org.lwjglb.game.UI.LightControls;
+import org.lwjglb.game.UI.MouseDisplay;
 
 import static org.lwjgl.glfw.GLFW.*;
 

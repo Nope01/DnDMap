@@ -1,8 +1,9 @@
-package org.lwjglb.game;
+package org.lwjglb.game.UI;
 
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjglb.engine.IGuiInstance;
@@ -34,9 +35,6 @@ public class MouseDisplay implements IGuiInstance {
 
     @Override
     public void drawGui() {
-        ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
-        ImGui.setNextWindowSize(450, 400);
-
         ImGui.begin("Mouse Display");
         ImGui.text("View coords");
         ImGui.button(String.valueOf("X:" + viewPos.x()));
