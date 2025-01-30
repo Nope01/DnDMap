@@ -10,10 +10,7 @@ import org.lwjglb.assets.Hexagon;
 import org.lwjglb.assets.Plane;
 import org.lwjglb.engine.*;
 import org.lwjglb.engine.graph.*;
-import org.lwjglb.engine.scene.Camera;
-import org.lwjglb.engine.scene.Entity;
-import org.lwjglb.engine.scene.ModelLoader;
-import org.lwjglb.engine.scene.Scene;
+import org.lwjglb.engine.scene.*;
 import org.lwjglb.engine.scene.lights.PointLight;
 import org.lwjglb.engine.scene.lights.SceneLights;
 import org.lwjglb.engine.scene.lights.SpotLight;
@@ -28,11 +25,13 @@ public class Main implements IAppLogic, IGuiInstance {
     private static final float MOUSE_SENSITIVITY = 0.08f;
     private static final float MOVEMENT_SPEED = 0.02f;
     private static final float PAN_SPEED = 0.005f;
+    private static final int NUM_CHUNKS = 4;
 
     private Entity cubeEntity;
     private Entity treeEntity;
     private Entity planeEntity;
     private Entity hexEntity;
+    private Entity[][] terrainEntities;
 
     private Vector4f displInc = new Vector4f();
     private float rotation;
@@ -56,44 +55,26 @@ public class Main implements IAppLogic, IGuiInstance {
     @Override
     public void init(Window window, Scene scene, Render render) {
         Camera camera = scene.getCamera();
-        camera.setPosition(0.0f, 1.0f, 4.0f);
+        camera.setPosition(0.0f, 0.5f, 4.0f);
 
-        //Cube
-        Model cubeModel = ModelLoader.loadModel("cube-model", "resources/models/cube/cube.obj",
+        String quadModelId = "quad-model";
+        Model quadModel = ModelLoader.loadModel("quad-model", "resources/models/quad/quad.obj",
                 scene.getTextureCache());
-        scene.addModel(cubeModel);
+        scene.addModel(quadModel);
 
-        cubeEntity = new Entity("cube-entity", cubeModel.getId());
-        cubeEntity.setPosition(0, 1, 0);
-        cubeEntity.updateModelMatrix();
-        //scene.addEntity(cubeEntity);
-
-        //Tree
-        Model treeModel = ModelLoader.loadModel("tree-model", "resources/models/tree/tree.obj",
-                scene.getTextureCache());
-        scene.addModel(treeModel);
-
-        treeEntity = new Entity("tree-entity", treeModel.getId());
-        treeEntity.setPosition(1, 0, 1);
-        treeEntity.setScale(0.1f);
-        treeEntity.updateModelMatrix();
-        //scene.addEntity(treeEntity);
-
-        //Plane
-        Vector4f color = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
-        Texture planeTexture = scene.getTextureCache().createTexture("resources/models/default/default_texture.png");
-        Material planeMaterial = new Material(color);
-        Model planeModel = Plane.createModel(new Plane("plane-model", planeTexture, planeMaterial));
-        scene.addModel(planeModel);
-
-        planeEntity = new Entity("plane-entity", planeModel.getId());
-        planeEntity.setPosition(0, 0, 0);
-        planeEntity.setScale(10.0f);
-        planeEntity.updateModelMatrix();
-        scene.addEntity(planeEntity);
+        int numRows = NUM_CHUNKS * 2 + 1;
+        int numCols = numRows;
+        terrainEntities = new Entity[numRows][numCols];
+        for (int j = 0; j < numRows; j++) {
+            for (int i = 0; i < numCols; i++) {
+                Entity entity = new Entity("TERRAIN_" + j + "_" + i, quadModelId);
+                terrainEntities[j][i] = entity;
+                scene.addEntity(entity);
+            }
+        }
 
         //Hexagon
-        color = new Vector4f(1.0f, 0.0f, 0.0f, 1.0f);
+        Vector4f color = new Vector4f(1.0f, 0.0f, 0.0f, 1.0f);
         Texture hexTexture = scene.getTextureCache().createTexture("resources/models/default/default_texture.png");
         Material hexMaterial = new Material(color);
         Model hexModel = Hexagon.createModel(new Hexagon("hex-model", hexTexture, hexMaterial));
@@ -111,6 +92,13 @@ public class Main implements IAppLogic, IGuiInstance {
         sceneLights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1),
                 new Vector3f(0, 1, 1.4f), 1.0f));
 
+        Skybox skybox = new Skybox("resources/models/skybox/skybox.obj", scene.getTextureCache());
+        skybox.getSkyboxEntity().setScale(50);
+        skybox.getSkyboxEntity().updateModelMatrix();
+        scene.setSkybox(skybox);
+
+        updateTerrain(scene);
+
         Vector3f coneDir = new Vector3f(0, 0, -1);
         sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1),
                 new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
@@ -118,7 +106,6 @@ public class Main implements IAppLogic, IGuiInstance {
         gui = new Gui(scene);
         scene.setGuiInstance(gui);
     }
-
 
     @Override
     public void input(Window window, Scene scene, long diffTimeMillis, boolean inputConsumed) {
@@ -163,6 +150,31 @@ public class Main implements IAppLogic, IGuiInstance {
     @Override
     public void update(Window window, Scene scene, long diffTimeMillis) {
         hexEntity.updateModelMatrix();
+        updateTerrain(scene);
+    }
+
+    public void updateTerrain(Scene scene) {
+        int cellSize = 10;
+        Camera camera = scene.getCamera();
+        Vector3f cameraPos = camera.getPosition();
+        int cellCol = (int) (cameraPos.x / cellSize);
+        int cellRow = (int) (cameraPos.z / cellSize);
+
+        int numRows = NUM_CHUNKS * 2 + 1;
+        int numCols = numRows;
+        int zOffset = -NUM_CHUNKS;
+        float scale = cellSize / 2.0f;
+        for (int j = 0; j < numRows; j++) {
+            int xOffset = -NUM_CHUNKS;
+            for (int i = 0; i < numCols; i++) {
+                Entity entity = terrainEntities[j][i];
+                entity.setScale(scale);
+                entity.setPosition((cellCol + xOffset) * 2.0f, 0, (cellRow + zOffset) * 2.0f);
+                entity.getModelMatrix().identity().scale(scale).translate(entity.getPosition());
+                xOffset++;
+            }
+            zOffset++;
+        }
     }
 
     @Override
