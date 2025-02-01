@@ -7,6 +7,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjglb.assets.Hexagon;
+import org.lwjglb.assets.Line;
 import org.lwjglb.assets.Plane;
 import org.lwjglb.engine.*;
 import org.lwjglb.engine.graph.*;
@@ -31,6 +32,7 @@ public class Main implements IAppLogic, IGuiInstance {
     private Entity treeEntity;
     private Entity planeEntity;
     private Entity hexEntity;
+    private Entity lineEntity;
     private Entity[][] terrainEntities;
 
     private Vector4f displInc = new Vector4f();
@@ -84,6 +86,18 @@ public class Main implements IAppLogic, IGuiInstance {
         hexEntity.setPosition(0, 1, 0);
         hexEntity.updateModelMatrix();
         scene.addEntity(hexEntity);
+
+        //Line
+        color = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
+        Texture lineTexture = scene.getTextureCache().createTexture("resources/models/default/default_texture.png");
+        Material lineMaterial = new Material(color);
+        Model lineModel = Line.createModel(new Line("line-model", lineTexture, lineMaterial));
+        scene.addModel(lineModel);
+
+        lineEntity = new Entity("line-entity", lineModel.getId(), true);
+        lineEntity.setPosition(0, 0, 0);
+        lineEntity.updateModelMatrix();
+        scene.addEntity(lineEntity);
 
         //Lights
         SceneLights sceneLights = new SceneLights();
@@ -149,7 +163,11 @@ public class Main implements IAppLogic, IGuiInstance {
 
     @Override
     public void update(Window window, Scene scene, long diffTimeMillis) {
-        hexEntity.updateModelMatrix();
+        for (Model model: scene.getModelMap().values()) {
+            for (Entity entity: model.getEntitiesList()) {
+                entity.updateModelMatrix();
+            }
+        }
         updateTerrain(scene);
     }
 

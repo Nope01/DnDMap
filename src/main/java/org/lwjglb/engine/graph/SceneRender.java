@@ -187,7 +187,12 @@ public class SceneRender {
                     glBindVertexArray(mesh.getVaoId());
                     for (Entity entity : entities) {
                         uniformsMap.setUniform("modelMatrix", entity.getModelMatrix());
-                        glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                        if (entity.getLine()) {
+                            glDrawElements(GL_LINES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                        }
+                        else {
+                            glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                        }
                     }
                 }
             }

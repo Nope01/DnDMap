@@ -15,6 +15,7 @@ public class Gui implements IGuiInstance {
 
     public Gui(Scene scene) {
         ImGui.getIO().setFontGlobalScale(1.5f);
+        ImGui.getIO().setWantCaptureMouse(true);
         mouseDisplay = new MouseDisplay(scene);
         lightControls = new LightControls(scene);
         menu = new Menu(scene);
