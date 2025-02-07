@@ -34,11 +34,11 @@ public class Main implements IAppLogic, IGuiInstance {
     private Entity cubeEntity1;
     private Entity cubeEntity2;
     private Entity treeEntity;
-    private Entity quadEntity;
-    private Entity carEntity;
+    private Entity planeEntity;
     private Entity hexagonEntity;
     private Entity lineEntity;
     private Entity[][] terrainEntities;
+    private Entity quadEntity;
 
     private Vector4f displInc = new Vector4f();
     private float rotation;
