@@ -34,7 +34,8 @@ public class Main implements IAppLogic, IGuiInstance {
     private Entity cubeEntity1;
     private Entity cubeEntity2;
     private Entity treeEntity;
-    private Entity planeEntity;
+    private Entity quadEntity;
+    private Entity carEntity;
     private Entity hexagonEntity;
     private Entity lineEntity;
     private Entity[][] terrainEntities;
@@ -69,16 +70,9 @@ public class Main implements IAppLogic, IGuiInstance {
                 scene.getTextureCache());
         scene.addModel(quadModel);
 
-        int numRows = NUM_CHUNKS * 2 + 1;
-        int numCols = numRows;
-        terrainEntities = new Entity[numRows][numCols];
-        for (int j = 0; j < numRows; j++) {
-            for (int i = 0; i < numCols; i++) {
-                Entity entity = new Entity("TERRAIN_" + j + "_" + i, quadModelId);
-                terrainEntities[j][i] = entity;
-                scene.addEntity(entity);
-            }
-        }
+        quadEntity = new Entity("quad-entity", quadModel.getId());
+        quadEntity.setScale(5.0f);
+        scene.addEntity(quadEntity);
 
         //Hexagon
         Model hexagonModel = ModelLoader.loadModel("hexagon-model", "resources/models/hexagon/hexagon.obj",
@@ -112,8 +106,6 @@ public class Main implements IAppLogic, IGuiInstance {
         skybox.getSkyboxEntity().setScale(50);
         skybox.getSkyboxEntity().updateModelMatrix();
         scene.setSkybox(skybox);
-
-        updateTerrain(scene);
 
         Vector3f coneDir = new Vector3f(0, 0, -1);
         sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1),
@@ -156,7 +148,17 @@ public class Main implements IAppLogic, IGuiInstance {
         }
 
         if (mouseInput.isLeftButtonPressed()) {
-            selectEntity(window, scene, mouseInput.getMousePos());
+            //System.out.println(selectEntity(window, scene, mouseInput.getMousePos()));
+
+            if (selectEntity(window, scene, mouseInput.getMousePos())) {
+                Vector3f pos = scene.getSelectedEntity().getPosition();
+                Vector3f dir = new Vector3f(mouseInput.getDisplVec().y, mouseInput.getDisplVec().x, 0.0f);
+                dir.div(50f);
+                System.out.println(dir.x);
+                pos.add(dir);
+            }
+
+
         }
 
         if (inputConsumed) {
@@ -170,31 +172,6 @@ public class Main implements IAppLogic, IGuiInstance {
             for (Entity entity: model.getEntitiesList()) {
                 entity.updateModelMatrix();
             }
-        }
-        updateTerrain(scene);
-    }
-
-    public void updateTerrain(Scene scene) {
-        int cellSize = 10;
-        Camera camera = scene.getCamera();
-        Vector3f cameraPos = camera.getPosition();
-        int cellCol = (int) (cameraPos.x / cellSize);
-        int cellRow = (int) (cameraPos.z / cellSize);
-
-        int numRows = NUM_CHUNKS * 2 + 1;
-        int numCols = numRows;
-        int zOffset = -NUM_CHUNKS;
-        float scale = cellSize / 2.0f;
-        for (int j = 0; j < numRows; j++) {
-            int xOffset = -NUM_CHUNKS;
-            for (int i = 0; i < numCols; i++) {
-                Entity entity = terrainEntities[j][i];
-                entity.setScale(scale);
-                entity.setPosition((cellCol + xOffset) * 2.0f, 0, (cellRow + zOffset) * 2.0f);
-                entity.getModelMatrix().identity().scale(scale).translate(entity.getPosition());
-                xOffset++;
-            }
-            zOffset++;
         }
     }
 
@@ -218,7 +195,7 @@ public class Main implements IAppLogic, IGuiInstance {
         return imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard();
     }
 
-    private void selectEntity(Window window, Scene scene, Vector2f mousePos) {
+    private boolean selectEntity(Window window, Scene scene, Vector2f mousePos) {
         int wdwWidth = window.getWidth();
         int wdwHeight = window.getHeight();
 
@@ -270,6 +247,14 @@ public class Main implements IAppLogic, IGuiInstance {
                 }
                 modelMatrix.identity();
             }
+        }
+        //System.out.println("Selected entity: " + selectedEntity);
+        if (selectedEntity == null) {
+            scene.setSelectedEntity(selectedEntity);
+            return false;
+        }
+        else {
+            return true;
         }
     }
 }
