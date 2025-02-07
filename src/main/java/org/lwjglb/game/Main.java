@@ -38,6 +38,7 @@ public class Main implements IAppLogic, IGuiInstance {
     private Entity hexagonEntity;
     private Entity lineEntity;
     private Entity[][] terrainEntities;
+    private Entity quadEntity;
 
     private Vector4f displInc = new Vector4f();
     private float rotation;
@@ -69,16 +70,9 @@ public class Main implements IAppLogic, IGuiInstance {
                 scene.getTextureCache());
         scene.addModel(quadModel);
 
-        int numRows = NUM_CHUNKS * 2 + 1;
-        int numCols = numRows;
-        terrainEntities = new Entity[numRows][numCols];
-        for (int j = 0; j < numRows; j++) {
-            for (int i = 0; i < numCols; i++) {
-                Entity entity = new Entity("TERRAIN_" + j + "_" + i, quadModelId);
-                terrainEntities[j][i] = entity;
-                scene.addEntity(entity);
-            }
-        }
+        quadEntity = new Entity("quad-entity", quadModel.getId());
+        quadEntity.setScale(5.0f);
+        scene.addEntity(quadEntity);
 
         //Hexagon
         Model hexagonModel = ModelLoader.loadModel("hexagon-model", "resources/models/hexagon/hexagon.obj",
@@ -175,7 +169,7 @@ public class Main implements IAppLogic, IGuiInstance {
     }
 
     public void updateTerrain(Scene scene) {
-        int cellSize = 10;
+       /* int cellSize = 10;
         Camera camera = scene.getCamera();
         Vector3f cameraPos = camera.getPosition();
         int cellCol = (int) (cameraPos.x / cellSize);
@@ -196,6 +190,7 @@ public class Main implements IAppLogic, IGuiInstance {
             }
             zOffset++;
         }
+        */
     }
 
     @Override
