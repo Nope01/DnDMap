@@ -265,12 +265,12 @@ public class Main implements IAppLogic, IGuiInstance {
                         && nearFar.x < closestDistance) {
                             closestDistance = nearFar.x;
                             selectedEntity = entity;
-                            System.out.println(entity);
+                            scene.setSelectedEntity(selectedEntity);
                         }
                     }
                 }
+                modelMatrix.identity();
             }
-            modelMatrix.identity();
         }
     }
 }
