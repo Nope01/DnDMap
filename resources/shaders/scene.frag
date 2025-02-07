@@ -53,6 +53,7 @@ uniform AmbientLight ambientLight;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 uniform DirectionalLight directionalLight;
+uniform int selected;
 
 vec4 calcAmbient(AmbientLight ambientLight, vec4 ambient) {
     return vec4(ambientLight.factor * ambientLight.color, 1) * ambient;
@@ -110,6 +111,8 @@ vec4 calcDirectionalLight(vec4 diffuse, vec4 specular, DirectionalLight light, v
 }
 
 void main() {
+
+
     vec4 text_color = texture(txtSampler, outTextCoord);
     vec4 ambient = calcAmbient(ambientLight, text_color + material.ambient);
     vec4 diffuse = text_color + material.diffuse;
@@ -129,4 +132,9 @@ void main() {
         }
     }
     fragColor = ambient + diffuseSpecularComp;
+
+    //Selection
+    if (selected > 0) {
+        fragColor = vec4(fragColor.x, fragColor.y, 1, 1);
+    }
 }

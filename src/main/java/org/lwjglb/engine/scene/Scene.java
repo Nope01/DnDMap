@@ -17,6 +17,7 @@ public class Scene {
     private IGuiInstance guiInstance;
     private SceneLights sceneLights;
     private Skybox skybox;
+    private Entity selectedEntity;
 
     public Scene(int width, int height) {
         modelMap = new HashMap<>();
@@ -80,5 +81,13 @@ public class Scene {
 
     public void setSkybox(Skybox skybox) {
         this.skybox = skybox;
+    }
+
+    public Entity getSelectedEntity() {
+        return selectedEntity;
+    }
+
+    public void setSelectedEntity(Entity selectedEntity) {
+        this.selectedEntity = selectedEntity;
     }
 }

@@ -1,5 +1,6 @@
 package org.lwjglb.engine.graph;
 
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.*;
 
@@ -13,6 +14,8 @@ public class Mesh {
     private int numVertices;
     private int vaoId;
     private List<Integer> vboIdList;
+    private Vector3f aabbMin;
+    private Vector3f aabbMax;
 
     public Mesh(float[] positions, float[] normals, int[] indices) {
         numVertices = indices.length;
@@ -54,9 +57,13 @@ public class Mesh {
 
         MemoryUtil.memFree(positionsBuffer);
         MemoryUtil.memFree(indicesBuffer);
+
+        this.aabbMin = aabbMin;
+        this.aabbMax = aabbMax;
     }
 
-    public Mesh(float[] positions, float[] normals, float[] textCoords, int[] indices) {
+    public Mesh(float[] positions, float[] normals, float[] textCoords, int[] indices,
+                Vector3f aabbMin, Vector3f aabbMax) {
         numVertices = indices.length;
         vboIdList = new ArrayList<>();
 
@@ -108,6 +115,9 @@ public class Mesh {
         MemoryUtil.memFree(normalsBuffer);
         MemoryUtil.memFree(textCoordsBuffer);
         MemoryUtil.memFree(indicesBuffer);
+
+        this.aabbMin = aabbMin;
+        this.aabbMax = aabbMax;
     }
 
     public void cleanup() {
@@ -121,5 +131,13 @@ public class Mesh {
 
     public final int getVaoId() {
         return vaoId;
+    }
+
+    public Vector3f getAabbMin() {
+        return aabbMin;
+    }
+
+    public Vector3f getAabbMax() {
+        return aabbMax;
     }
 }

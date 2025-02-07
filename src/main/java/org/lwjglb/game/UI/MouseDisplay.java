@@ -31,7 +31,7 @@ public class MouseDisplay implements IGuiInstance {
         resolution = new Vector2f();
         displVec = new Vector2f();
 
-        Model model = scene.getModelMap().get("hex-model");
+        Model model = scene.getModelMap().get("cube-model");
         Vector3f pos = model.getEntitiesList().getFirst().getPosition();
         posX = new float[]{pos.x};
         posY = new float[]{pos.y};
@@ -41,6 +41,8 @@ public class MouseDisplay implements IGuiInstance {
         viewVec = new Vector3f();
 
         camPos.sub(pos, viewVec);
+
+        entity = "None";
     }
 
     @Override
@@ -76,8 +78,9 @@ public class MouseDisplay implements IGuiInstance {
 
         boolean consumed = imGuiIO.getWantCaptureMouse();
         if (consumed) {
-            Model model = scene.getModelMap().get("hex-model");
+            Model model = scene.getModelMap().get("cube-model");
             model.getEntitiesList().getFirst().setPosition(posX[0], posY[0], posZ[0]);
+            //this.entity = scene.getSelectedEntity().getId();
         }
 
         this.mousePos = mousePos;
@@ -85,12 +88,6 @@ public class MouseDisplay implements IGuiInstance {
         this.viewPos = mouseInput.getViewPos();
         this.displVec = mouseInput.getDisplVec();
         this.camPos = scene.getCamera().getPosition();
-
-        Model model = scene.getModelMap().get("hex-model");
-        this.camPos.sub(model.getEntitiesList().getFirst().getPosition(), this.viewVec);
-
-
-
 
 
         return consumed;

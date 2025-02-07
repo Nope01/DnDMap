@@ -37,6 +37,8 @@ public class SceneRender {
         uniformsMap.createUniform("modelMatrix");
         uniformsMap.createUniform("txtSampler");
 
+        uniformsMap.createUniform("selected");
+
         uniformsMap.createUniform("material.ambient");
         uniformsMap.createUniform("material.diffuse");
         uniformsMap.createUniform("material.specular");
@@ -168,6 +170,8 @@ public class SceneRender {
 
         updateLights(scene);
 
+        Entity selectedEntity = scene.getSelectedEntity();
+
         for (Model model : models) {
             List<Entity> entities = model.getEntitiesList();
 
@@ -186,6 +190,9 @@ public class SceneRender {
                 for (Mesh mesh : material.getMeshList()) {
                     glBindVertexArray(mesh.getVaoId());
                     for (Entity entity : entities) {
+                        uniformsMap.setUniform("selected", selectedEntity != null
+                        && selectedEntity.getId().equals(entity.getId()) ? 1 : 0);
+
                         uniformsMap.setUniform("modelMatrix", entity.getModelMatrix());
                         if (entity.getLine()) {
                             glDrawElements(GL_LINES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
