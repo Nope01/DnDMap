@@ -148,7 +148,6 @@ public class ModelLoader {
 
         //Bounding box
         AIAABB aabb = aiMesh.mAABB();
-        System.out.println(aabb.mMin().y());
         Vector3f aabbMin = new Vector3f(aabb.mMin().x(), aabb.mMin().y(), aabb.mMin().z());
         Vector3f aabbMax = new Vector3f(aabb.mMax().x(), aabb.mMax().y(), aabb.mMax().z());
 

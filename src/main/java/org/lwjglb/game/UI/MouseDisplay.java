@@ -10,6 +10,7 @@ import org.lwjglb.engine.IGuiInstance;
 import org.lwjglb.engine.MouseInput;
 import org.lwjglb.engine.Window;
 import org.lwjglb.engine.graph.Model;
+import org.lwjglb.engine.scene.Entity;
 import org.lwjglb.engine.scene.Scene;
 
 public class MouseDisplay implements IGuiInstance {
@@ -21,6 +22,7 @@ public class MouseDisplay implements IGuiInstance {
     private float[] posX;
     private float[] posY;
     private float[] posZ;
+    private Entity selectedEntity;
 
     private Vector3f camPos;
     private Vector3f viewVec;
@@ -41,8 +43,7 @@ public class MouseDisplay implements IGuiInstance {
         viewVec = new Vector3f();
 
         camPos.sub(pos, viewVec);
-
-        entity = "None";
+        selectedEntity = scene.getSelectedEntity();
     }
 
     @Override
@@ -78,9 +79,9 @@ public class MouseDisplay implements IGuiInstance {
 
         boolean consumed = imGuiIO.getWantCaptureMouse();
         if (consumed) {
-            Model model = scene.getModelMap().get("cube-model");
-            model.getEntitiesList().getFirst().setPosition(posX[0], posY[0], posZ[0]);
-            //this.entity = scene.getSelectedEntity().getId();
+            if (selectedEntity != null) {
+                scene.getSelectedEntity().setPosition(posX[0], posY[0], posZ[0]);
+            }
         }
 
         this.mousePos = mousePos;
@@ -88,7 +89,6 @@ public class MouseDisplay implements IGuiInstance {
         this.viewPos = mouseInput.getViewPos();
         this.displVec = mouseInput.getDisplVec();
         this.camPos = scene.getCamera().getPosition();
-
 
         return consumed;
     }

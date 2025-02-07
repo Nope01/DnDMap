@@ -3,10 +3,7 @@ package org.lwjglb.game;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiCond;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.*;
 import org.joml.primitives.Intersectionf;
 import org.lwjglb.assets.Hexagon;
 import org.lwjglb.assets.Line;
@@ -21,6 +18,7 @@ import org.lwjglb.game.UI.Gui;
 import org.lwjglb.game.UI.LightControls;
 import org.lwjglb.game.UI.MouseDisplay;
 
+import java.lang.Math;
 import java.util.Collection;
 import java.util.List;
 
@@ -65,30 +63,31 @@ public class Main implements IAppLogic, IGuiInstance {
         Camera camera = scene.getCamera();
         camera.setPosition(0.0f, 0.5f, 4.0f);
 
-//        String quadModelId = "quad-model";
-//        Model quadModel = ModelLoader.loadModel("quad-model", "resources/models/quad/quad.obj",
-//                scene.getTextureCache());
-//        scene.addModel(quadModel);
-//
-//        int numRows = NUM_CHUNKS * 2 + 1;
-//        int numCols = numRows;
-//        terrainEntities = new Entity[numRows][numCols];
-//        for (int j = 0; j < numRows; j++) {
-//            for (int i = 0; i < numCols; i++) {
-//                Entity entity = new Entity("TERRAIN_" + j + "_" + i, quadModelId);
-//                terrainEntities[j][i] = entity;
-//                scene.addEntity(entity);
-//            }
-//        }
+        //Plane
+        String quadModelId = "quad-model";
+        Model quadModel = ModelLoader.loadModel("quad-model", "resources/models/quad/quad.obj",
+                scene.getTextureCache());
+        scene.addModel(quadModel);
+
+        int numRows = NUM_CHUNKS * 2 + 1;
+        int numCols = numRows;
+        terrainEntities = new Entity[numRows][numCols];
+        for (int j = 0; j < numRows; j++) {
+            for (int i = 0; i < numCols; i++) {
+                Entity entity = new Entity("TERRAIN_" + j + "_" + i, quadModelId);
+                terrainEntities[j][i] = entity;
+                scene.addEntity(entity);
+            }
+        }
 
         //Hexagon
-//        Model hexagonModel = ModelLoader.loadModel("hexagon-model", "resources/models/hexagon/hexagon.obj",
-//                scene.getTextureCache());
-//        scene.addModel(hexagonModel);
-//
-//        hexagonEntity = new Entity("hexagon-entity", hexagonModel.getId());
-//        hexagonEntity.setPosition(0.0f, 1.0f, 0.0f);
-//        scene.addEntity(hexagonEntity);
+        Model hexagonModel = ModelLoader.loadModel("hexagon-model", "resources/models/hexagon/hexagon.obj",
+                scene.getTextureCache());
+        scene.addModel(hexagonModel);
+
+        hexagonEntity = new Entity("hexagon-entity", hexagonModel.getId());
+        hexagonEntity.setPosition(0.0f, 1.0f, 0.0f);
+        scene.addEntity(hexagonEntity);
 
         //Cubes
         Model cubeModel = ModelLoader.loadModel("cube-model", "resources/models/cube/cube.obj",
@@ -176,27 +175,27 @@ public class Main implements IAppLogic, IGuiInstance {
     }
 
     public void updateTerrain(Scene scene) {
-//        int cellSize = 10;
-//        Camera camera = scene.getCamera();
-//        Vector3f cameraPos = camera.getPosition();
-//        int cellCol = (int) (cameraPos.x / cellSize);
-//        int cellRow = (int) (cameraPos.z / cellSize);
-//
-//        int numRows = NUM_CHUNKS * 2 + 1;
-//        int numCols = numRows;
-//        int zOffset = -NUM_CHUNKS;
-//        float scale = cellSize / 2.0f;
-//        for (int j = 0; j < numRows; j++) {
-//            int xOffset = -NUM_CHUNKS;
-//            for (int i = 0; i < numCols; i++) {
-//                Entity entity = terrainEntities[j][i];
-//                entity.setScale(scale);
-//                entity.setPosition((cellCol + xOffset) * 2.0f, 0, (cellRow + zOffset) * 2.0f);
-//                entity.getModelMatrix().identity().scale(scale).translate(entity.getPosition());
-//                xOffset++;
-//            }
-//            zOffset++;
-//        }
+        int cellSize = 10;
+        Camera camera = scene.getCamera();
+        Vector3f cameraPos = camera.getPosition();
+        int cellCol = (int) (cameraPos.x / cellSize);
+        int cellRow = (int) (cameraPos.z / cellSize);
+
+        int numRows = NUM_CHUNKS * 2 + 1;
+        int numCols = numRows;
+        int zOffset = -NUM_CHUNKS;
+        float scale = cellSize / 2.0f;
+        for (int j = 0; j < numRows; j++) {
+            int xOffset = -NUM_CHUNKS;
+            for (int i = 0; i < numCols; i++) {
+                Entity entity = terrainEntities[j][i];
+                entity.setScale(scale);
+                entity.setPosition((cellCol + xOffset) * 2.0f, 0, (cellRow + zOffset) * 2.0f);
+                entity.getModelMatrix().identity().scale(scale).translate(entity.getPosition());
+                xOffset++;
+            }
+            zOffset++;
+        }
     }
 
     @Override
