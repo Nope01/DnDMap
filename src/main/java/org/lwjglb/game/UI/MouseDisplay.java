@@ -86,7 +86,7 @@ public class MouseDisplay implements IGuiInstance {
         this.displVec = mouseInput.getDisplVec();
         this.camPos = scene.getCamera().getPosition();
 
-        Model model = scene.getModelMap().get("line-model");
+        Model model = scene.getModelMap().get("hex-model");
         this.camPos.sub(model.getEntitiesList().getFirst().getPosition(), this.viewVec);
 
 
