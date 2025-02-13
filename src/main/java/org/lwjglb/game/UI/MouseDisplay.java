@@ -11,6 +11,7 @@ import org.lwjglb.engine.MouseInput;
 import org.lwjglb.engine.Window;
 import org.lwjglb.engine.graph.Model;
 import org.lwjglb.engine.scene.Entity;
+import org.lwjglb.engine.scene.Hexagon;
 import org.lwjglb.engine.scene.Scene;
 
 public class MouseDisplay implements IGuiInstance {
@@ -81,7 +82,10 @@ public class MouseDisplay implements IGuiInstance {
 
         if (this.selectedEntity != null) {
             this.selectedPos = scene.getSelectedEntity().getPosition();
-            this.selectedOffsetCoords = scene.getSelectedEntity().getOffset();
+            //Checks if the entity is a hexagon before calling a hexagon specific method
+            if (this.selectedEntity instanceof Hexagon) {
+                this.selectedOffsetCoords = ((Hexagon) selectedEntity).getOffset();
+            }
         }
 
         this.mousePos = mousePos;

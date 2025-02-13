@@ -56,7 +56,7 @@ public class Entity {
         return scale;
     }
 
-    public final void setPosition(float x, float y, float z) {
+    public void setPosition(float x, float y, float z) {
         position.x = x;
         position.y = y;
         position.z = z;
@@ -84,9 +84,5 @@ public class Entity {
 
     public void setLine(boolean line) {
         this.line = line;
-    }
-
-    public Vector2f getOffset() {
-        return new Vector2f();
     }
 }
