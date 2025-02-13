@@ -5,7 +5,9 @@ import imgui.ImGuiIO;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.lwjglb.engine.IGuiInstance;
 import org.lwjglb.engine.MouseInput;
 import org.lwjglb.engine.Window;
@@ -22,8 +24,9 @@ public class MouseDisplay implements IGuiInstance {
 
     private Entity selectedEntity;
     private Vector3f selectedPos;
-    private Vector2f selectedOffsetCoords;
-    private Vector3f selectedCubeCoords;
+    private Vector2i selectedOffsetCoords;
+    private Vector3i selectedCubeCoords;
+    private Vector3i neighbour;
 
     private Vector3f camPos;
     private Vector3f viewVec;
@@ -35,8 +38,9 @@ public class MouseDisplay implements IGuiInstance {
         displVec = new Vector2f();
 
         selectedPos = new Vector3f();
-        selectedOffsetCoords = new Vector2f();
-        selectedCubeCoords = new Vector3f();
+        selectedOffsetCoords = new Vector2i();
+        selectedCubeCoords = new Vector3i();
+        neighbour = new Vector3i();
 
         camPos = scene.getCamera().getPosition();
         viewVec = new Vector3f();
@@ -60,6 +64,13 @@ public class MouseDisplay implements IGuiInstance {
         ImGui.button(String.valueOf("X:" + selectedOffsetCoords.x()));
         ImGui.button(String.valueOf("Y:" + selectedOffsetCoords.y()));
         ImGui.separator();
+        ImGui.text("Cube coords");
+        ImGui.button(String.valueOf("X:" + selectedCubeCoords.x()));
+        ImGui.button(String.valueOf("Y:" + selectedCubeCoords.y()));
+        ImGui.button(String.valueOf("Z:" + selectedCubeCoords.z()));
+        ImGui.button(String.valueOf("Above X:" + neighbour.x));
+        ImGui.button(String.valueOf("Above Y:" + neighbour.y));
+        ImGui.button(String.valueOf("Above Z:" + neighbour.z));
 
         ImGui.end();
     }
@@ -85,6 +96,8 @@ public class MouseDisplay implements IGuiInstance {
             //Checks if the entity is a hexagon before calling a hexagon specific method
             if (this.selectedEntity instanceof Hexagon) {
                 this.selectedOffsetCoords = ((Hexagon) selectedEntity).getOffset();
+                this.selectedCubeCoords = ((Hexagon) selectedEntity).offsetToCubeCoords(this.selectedOffsetCoords);
+                this.neighbour = ((Hexagon)selectedEntity).getCubeNeighbour(this.selectedCubeCoords, 2);
             }
         }
 

@@ -28,10 +28,10 @@ public class Gui implements IGuiInstance {
         //For enabling resizing
         if (firstFrame) {
             ImGui.setNextWindowPos(0, 100, ImGuiCond.Always);
-            ImGui.setNextWindowSize(550, 400);
+            ImGui.setNextWindowSize(550, 600);
             mouseDisplay.drawGui();
 
-            ImGui.setNextWindowPos(0, 500, ImGuiCond.Always);
+            ImGui.setNextWindowPos(0, 700, ImGuiCond.Always);
             ImGui.setNextWindowSize(550, 400);
             lightControls.drawGui();
 

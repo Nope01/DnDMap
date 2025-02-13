@@ -104,7 +104,7 @@ public class Main implements IAppLogic, IGuiInstance {
                 Model model = ModelLoader.loadModel("hex-" + row + "-" + col, "resources/models/hexagon/hexagon.obj",
                         scene.getTextureCache());
                 scene.addModel(model);
-                Hexagon hexagon = new Hexagon("hex-" + row + "-" + col, model.getId(), new Vector2f(col, row));
+                Hexagon hexagon = new Hexagon("hex-" + row + "-" + col, model.getId(), new Vector2i(col, row));
                 //Entity entity = new Entity("hex-" + row + "-" + col, model.getId());
 
                 hexagon.setPosition(x, 0.0f, z);
