@@ -1,6 +1,7 @@
 package org.lwjglb.engine.scene;
 
 import org.joml.*;
+import org.lwjglb.engine.graph.Model;
 
 public class Entity {
 
@@ -85,4 +86,5 @@ public class Entity {
     public void setLine(boolean line) {
         this.line = line;
     }
+
 }

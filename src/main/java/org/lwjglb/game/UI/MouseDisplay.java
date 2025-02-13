@@ -34,18 +34,10 @@ public class MouseDisplay implements IGuiInstance {
         resolution = new Vector2f();
         displVec = new Vector2f();
 
-        Model model = scene.getModelMap().get("cube-model");
-        Vector3f pos = model.getEntitiesList().getFirst().getPosition();
-        posX = new float[]{pos.x};
-        posY = new float[]{pos.y};
-        posZ = new float[]{pos.z};
-
         selectedPos = new Vector3f();
 
         camPos = scene.getCamera().getPosition();
         viewVec = new Vector3f();
-
-        camPos.sub(pos, viewVec);
         selectedEntity = scene.getSelectedEntity();
     }
 
@@ -62,10 +54,6 @@ public class MouseDisplay implements IGuiInstance {
         ImGui.button(String.valueOf("Y:" + camPos.y()));
         ImGui.button(String.valueOf("Z:" + camPos.z()));
         ImGui.separator();
-        ImGui.text("Model manipulation");
-        ImGui.sliderFloat("Pos - x", posX, -3.0f, 3.0f, "%.2f");
-        ImGui.sliderFloat("Pos - y", posY, -3.0f, 3.0f, "%.2f");
-        ImGui.sliderFloat("Pos - z", posZ, -3.0f, 3.0f, "%.2f");
 
         ImGui.end();
     }

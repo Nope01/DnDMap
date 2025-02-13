@@ -54,7 +54,11 @@ public class ModelLoader {
         List<Material> materialList = new ArrayList<>();
         for (int i = 0; i < numMaterials; i++) {
             AIMaterial aiMaterial = AIMaterial.create(aiScene.mMaterials().get(i));
-            materialList.add(processMaterial(aiMaterial, modelDir, textureCache));
+            float x = (float) Math.random();
+            float y = (float) Math.random();
+            float z = (float) Math.random();
+            Vector4f colour = new Vector4f(x, y, z, 1);
+            materialList.add(processMaterial(aiMaterial, modelDir, textureCache, colour));
         }
 
         int numMeshes = aiScene.mNumMeshes();
@@ -94,36 +98,19 @@ public class ModelLoader {
         return indices.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    private static Material processMaterial(AIMaterial aiMaterial, String modelDir, TextureCache textureCache) {
+    private static Material processMaterial(AIMaterial aiMaterial, String modelDir, TextureCache textureCache, Vector4f colour) {
         Material material = new Material();
         try (MemoryStack stack = MemoryStack.stackPush()) {
             AIColor4D color = AIColor4D.create();
 
-            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0,
-                    color);
-            if (result == aiReturn_SUCCESS) {
-                material.setAmbientColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
-            }
+            material.setAmbientColor(colour);
 
-            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0,
-                    color);
-            if (result == aiReturn_SUCCESS) {
-                material.setDiffuseColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
-            }
+            material.setDiffuseColor(colour);
 
-            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0,
-                    color);
-            if (result == aiReturn_SUCCESS) {
-                material.setSpecularColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
-            }
+            material.setSpecularColor(colour);
 
             float reflectance = 0.0f;
             float[] shininessFactor = new float[]{0.0f};
-            int[] pMax = new int[]{1};
-            result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS_STRENGTH, aiTextureType_NONE, 0, shininessFactor, pMax);
-            if (result != aiReturn_SUCCESS) {
-                reflectance = shininessFactor[0];
-            }
             material.setReflectance(reflectance);
 
             AIString aiTexturePath = AIString.calloc(stack);

@@ -63,7 +63,8 @@ public class Main implements IAppLogic, IGuiInstance {
     @Override
     public void init(Window window, Scene scene, Render render) {
         Camera camera = scene.getCamera();
-        camera.setPosition(0.0f, 0.5f, 4.0f);
+        camera.setPosition(3.5f, 10.0f, 5.0f);
+        camera.setRotation(1.5f, 0.0f);
 
         //Plane
 //        String quadModelId = "quad-model";
@@ -79,20 +80,6 @@ public class Main implements IAppLogic, IGuiInstance {
         Model hexagonModel = ModelLoader.loadModel("hexagon-model", "resources/models/hexagon/hexagon.obj",
                 scene.getTextureCache());
         scene.addModel(hexagonModel);
-
-        hexagonEntity = new Entity("hexagon-entity", hexagonModel.getId());
-        hexagonEntity.setPosition(0.0f, 0.0f, 0.0f);
-        scene.addEntity(hexagonEntity);
-//
-//        Entity hex1  = new Entity("hex1", hexagonModel.getId());
-//        hex1.setPosition(1.5f, 0.0f, 1.0f);
-//        scene.addEntity(hex1);
-//
-//        Entity hex2  = new Entity("hex2", hexagonModel.getId());
-//        hex2.setPosition(0.0f, 0.0f, 2.0f);
-//        scene.addEntity(hex2);
-
-
 
         //Grid
         int numRows = 6;
@@ -116,30 +103,18 @@ public class Main implements IAppLogic, IGuiInstance {
                 else {
                     z = row * vertSpacing + (height/2);
                 }
-
                 x = col * horizSpacing;
 
-                Entity entity = new Entity("hex-" + row + "-" + col, hexagonModel.getId());
+                Model model = ModelLoader.loadModel("hex-" + row + "-" + col, "resources/models/hexagon/hexagon.obj",
+                        scene.getTextureCache());
+                scene.addModel(model);
+                Entity entity = new Entity("hex-" + row + "-" + col, model.getId());
 
                 entity.setPosition(x, 0.0f, z);
                 gridEntity[row][col] = entity;
-
                 scene.addEntity(entity);
             }
         }
-
-        //Cubes
-        Model cubeModel = ModelLoader.loadModel("cube-model", "resources/models/cube/cube.obj",
-                scene.getTextureCache());
-        scene.addModel(cubeModel);
-        cubeEntity1 = new Entity("cube-entity-1", cubeModel.getId());
-        cubeEntity1.setPosition(0, 2, -1);
-        scene.addEntity(cubeEntity1);
-
-        cubeEntity2 = new Entity("cube-entity-2", cubeModel.getId());
-        cubeEntity2.setPosition(-2, 2, -1);
-        scene.addEntity(cubeEntity2);
-
         //Lights
         SceneLights sceneLights = new SceneLights();
         sceneLights.getAmbientLight().setIntensity(0.3f);
