@@ -19,6 +19,7 @@ import org.lwjglb.game.UI.LightControls;
 import org.lwjglb.game.UI.MouseDisplay;
 
 import java.lang.Math;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Main implements IAppLogic, IGuiInstance {
     private Entity planeEntity;
     private Entity hexagonEntity;
     private Entity lineEntity;
-    private Entity[][] terrainEntities;
+    private Entity[][] gridEntity;
     private Entity quadEntity;
 
     private Vector4f displInc = new Vector4f();
@@ -65,14 +66,14 @@ public class Main implements IAppLogic, IGuiInstance {
         camera.setPosition(0.0f, 0.5f, 4.0f);
 
         //Plane
-        String quadModelId = "quad-model";
-        Model quadModel = ModelLoader.loadModel("quad-model", "resources/models/quad/quad.obj",
-                scene.getTextureCache());
-        scene.addModel(quadModel);
-
-        quadEntity = new Entity("quad-entity", quadModel.getId());
-        quadEntity.setScale(5.0f);
-        scene.addEntity(quadEntity);
+//        String quadModelId = "quad-model";
+//        Model quadModel = ModelLoader.loadModel("quad-model", "resources/models/quad/quad.obj",
+//                scene.getTextureCache());
+//        scene.addModel(quadModel);
+//
+//        quadEntity = new Entity("quad-entity", quadModel.getId());
+//        quadEntity.setScale(5.0f);
+//        scene.addEntity(quadEntity);
 
         //Hexagon
         Model hexagonModel = ModelLoader.loadModel("hexagon-model", "resources/models/hexagon/hexagon.obj",
@@ -80,8 +81,52 @@ public class Main implements IAppLogic, IGuiInstance {
         scene.addModel(hexagonModel);
 
         hexagonEntity = new Entity("hexagon-entity", hexagonModel.getId());
-        hexagonEntity.setPosition(0.0f, 1.0f, 0.0f);
+        hexagonEntity.setPosition(0.0f, 0.0f, 0.0f);
         scene.addEntity(hexagonEntity);
+//
+//        Entity hex1  = new Entity("hex1", hexagonModel.getId());
+//        hex1.setPosition(1.5f, 0.0f, 1.0f);
+//        scene.addEntity(hex1);
+//
+//        Entity hex2  = new Entity("hex2", hexagonModel.getId());
+//        hex2.setPosition(0.0f, 0.0f, 2.0f);
+//        scene.addEntity(hex2);
+
+
+
+        //Grid
+        int numRows = 6;
+        int numCols = 6;
+        float size = 1f;
+
+        float width = 2*size;
+        float height = (float) (width * Math.sqrt(3) / 2);
+
+        float horizSpacing = 0.75f * width;
+        float vertSpacing = height;
+
+        gridEntity = new Entity[numRows][numCols];
+        for (int col = 0; col < numCols; col++) {
+            for (int row = 0; row < numRows; row++) {
+                float x, z;
+
+                if (col % 2 == 0) {
+                    z = row * vertSpacing;
+                }
+                else {
+                    z = row * vertSpacing + (height/2);
+                }
+
+                x = col * horizSpacing;
+
+                Entity entity = new Entity("hex-" + row + "-" + col, hexagonModel.getId());
+
+                entity.setPosition(x, 0.0f, z);
+                gridEntity[row][col] = entity;
+
+                scene.addEntity(entity);
+            }
+        }
 
         //Cubes
         Model cubeModel = ModelLoader.loadModel("cube-model", "resources/models/cube/cube.obj",
@@ -152,13 +197,10 @@ public class Main implements IAppLogic, IGuiInstance {
 
             if (selectEntity(window, scene, mouseInput.getMousePos())) {
                 Vector3f pos = scene.getSelectedEntity().getPosition();
-                Vector3f dir = new Vector3f(mouseInput.getDisplVec().y, mouseInput.getDisplVec().x, 0.0f);
+                Vector3f dir = new Vector3f(mouseInput.getDisplVec().y, 0, mouseInput.getDisplVec().x);
                 dir.div(50f);
-                System.out.println(dir.x);
                 pos.add(dir);
             }
-
-
         }
 
         if (inputConsumed) {
@@ -168,6 +210,8 @@ public class Main implements IAppLogic, IGuiInstance {
 
     @Override
     public void update(Window window, Scene scene, long diffTimeMillis) {
+//        rotation += 1.5f;
+//        hexagonEntity.setRotation(1, 0, 0, (float) Math.toRadians(rotation));
         for (Model model: scene.getModelMap().values()) {
             for (Entity entity: model.getEntitiesList()) {
                 entity.updateModelMatrix();
@@ -248,7 +292,6 @@ public class Main implements IAppLogic, IGuiInstance {
                 modelMatrix.identity();
             }
         }
-        //System.out.println("Selected entity: " + selectedEntity);
         if (selectedEntity == null) {
             scene.setSelectedEntity(selectedEntity);
             return false;

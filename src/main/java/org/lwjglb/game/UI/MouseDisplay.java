@@ -23,6 +23,7 @@ public class MouseDisplay implements IGuiInstance {
     private float[] posY;
     private float[] posZ;
     private Entity selectedEntity;
+    private Vector3f selectedPos;
 
     private Vector3f camPos;
     private Vector3f viewVec;
@@ -39,6 +40,8 @@ public class MouseDisplay implements IGuiInstance {
         posY = new float[]{pos.y};
         posZ = new float[]{pos.z};
 
+        selectedPos = new Vector3f();
+
         camPos = scene.getCamera().getPosition();
         viewVec = new Vector3f();
 
@@ -49,10 +52,10 @@ public class MouseDisplay implements IGuiInstance {
     @Override
     public void drawGui() {
         ImGui.begin("Mouse Display");
-        ImGui.text("View vec");
-        ImGui.button(String.valueOf("X:" + viewVec.x()));
-        ImGui.button(String.valueOf("Y:" + viewVec.y()));
-        ImGui.button(String.valueOf("Z:" + viewVec.z()));
+        ImGui.text("Selected pos");
+        ImGui.button(String.valueOf("X:" + selectedPos.x));
+        ImGui.button(String.valueOf("Y:" + selectedPos.y));
+        ImGui.button(String.valueOf("Z:" + selectedPos.z));
         ImGui.separator();
         ImGui.text("Camera pos");
         ImGui.button(String.valueOf("X:" + camPos.x()));
@@ -79,11 +82,13 @@ public class MouseDisplay implements IGuiInstance {
 
         boolean consumed = imGuiIO.getWantCaptureMouse();
         if (consumed) {
-            if (selectedEntity != null) {
-                scene.getSelectedEntity().setPosition(posX[0], posY[0], posZ[0]);
-            }
-        }
 
+        }
+        this.selectedEntity = scene.getSelectedEntity();
+
+        if (this.selectedEntity != null) {
+            this.selectedPos = scene.getSelectedEntity().getPosition();
+        }
         this.mousePos = mousePos;
         this.resolution = mouseInput.getWindowSize();
         this.viewPos = mouseInput.getViewPos();
