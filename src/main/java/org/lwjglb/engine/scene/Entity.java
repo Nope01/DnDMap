@@ -1,7 +1,6 @@
 package org.lwjglb.engine.scene;
 
 import org.joml.*;
-import org.lwjglb.engine.graph.Model;
 
 public class Entity {
 
@@ -87,4 +86,7 @@ public class Entity {
         this.line = line;
     }
 
+    public Vector2f getOffset() {
+        return new Vector2f();
+    }
 }

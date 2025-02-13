@@ -19,11 +19,10 @@ public class MouseDisplay implements IGuiInstance {
     private Vector2f resolution;
     private Vector2f displVec;
 
-    private float[] posX;
-    private float[] posY;
-    private float[] posZ;
     private Entity selectedEntity;
     private Vector3f selectedPos;
+    private Vector2f selectedOffsetCoords;
+    private Vector3f selectedCubeCoords;
 
     private Vector3f camPos;
     private Vector3f viewVec;
@@ -35,6 +34,8 @@ public class MouseDisplay implements IGuiInstance {
         displVec = new Vector2f();
 
         selectedPos = new Vector3f();
+        selectedOffsetCoords = new Vector2f();
+        selectedCubeCoords = new Vector3f();
 
         camPos = scene.getCamera().getPosition();
         viewVec = new Vector3f();
@@ -53,6 +54,10 @@ public class MouseDisplay implements IGuiInstance {
         ImGui.button(String.valueOf("X:" + camPos.x()));
         ImGui.button(String.valueOf("Y:" + camPos.y()));
         ImGui.button(String.valueOf("Z:" + camPos.z()));
+        ImGui.separator();
+        ImGui.text("Offset coords");
+        ImGui.button(String.valueOf("X:" + selectedOffsetCoords.x()));
+        ImGui.button(String.valueOf("Y:" + selectedOffsetCoords.y()));
         ImGui.separator();
 
         ImGui.end();
@@ -76,7 +81,9 @@ public class MouseDisplay implements IGuiInstance {
 
         if (this.selectedEntity != null) {
             this.selectedPos = scene.getSelectedEntity().getPosition();
+            this.selectedOffsetCoords = scene.getSelectedEntity().getOffset();
         }
+
         this.mousePos = mousePos;
         this.resolution = mouseInput.getWindowSize();
         this.viewPos = mouseInput.getViewPos();

@@ -5,9 +5,6 @@ import imgui.ImGuiIO;
 import imgui.flag.ImGuiCond;
 import org.joml.*;
 import org.joml.primitives.Intersectionf;
-import org.lwjglb.assets.Hexagon;
-import org.lwjglb.assets.Line;
-import org.lwjglb.assets.Plane;
 import org.lwjglb.engine.*;
 import org.lwjglb.engine.graph.*;
 import org.lwjglb.engine.scene.*;
@@ -19,7 +16,6 @@ import org.lwjglb.game.UI.LightControls;
 import org.lwjglb.game.UI.MouseDisplay;
 
 import java.lang.Math;
-import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.List;
 
@@ -108,11 +104,12 @@ public class Main implements IAppLogic, IGuiInstance {
                 Model model = ModelLoader.loadModel("hex-" + row + "-" + col, "resources/models/hexagon/hexagon.obj",
                         scene.getTextureCache());
                 scene.addModel(model);
-                Entity entity = new Entity("hex-" + row + "-" + col, model.getId());
+                Hexagon hexagon = new Hexagon("hex-" + row + "-" + col, model.getId(), new Vector2f(col, row));
+                //Entity entity = new Entity("hex-" + row + "-" + col, model.getId());
 
-                entity.setPosition(x, 0.0f, z);
-                gridEntity[row][col] = entity;
-                scene.addEntity(entity);
+                hexagon.setPosition(x, 0.0f, z);
+                gridEntity[row][col] = hexagon;
+                scene.addEntity(hexagon);
             }
         }
         //Lights
