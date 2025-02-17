@@ -9,15 +9,17 @@ import org.lwjglb.engine.scene.Scene;
 public class Gui implements IGuiInstance {
 
     private boolean firstFrame = true;
-    private MouseDisplay mouseDisplay;
+    private Debug debug;
     private LightControls lightControls;
     private Menu menu;
 
     public Gui(Scene scene) {
         ImGui.getIO().setFontGlobalScale(1.5f);
         ImGui.getIO().setWantCaptureMouse(true);
-        mouseDisplay = new MouseDisplay(scene);
+
+        debug = new Debug(scene);
         lightControls = new LightControls(scene);
+
         menu = new Menu(scene);
     }
 
@@ -29,7 +31,7 @@ public class Gui implements IGuiInstance {
         if (firstFrame) {
             ImGui.setNextWindowPos(0, 100, ImGuiCond.Always);
             ImGui.setNextWindowSize(550, 600);
-            mouseDisplay.drawGui();
+            debug.drawGui();
 
             ImGui.setNextWindowPos(0, 700, ImGuiCond.Always);
             ImGui.setNextWindowSize(550, 400);
@@ -42,7 +44,7 @@ public class Gui implements IGuiInstance {
             firstFrame = false;
         }
         else {
-            mouseDisplay.drawGui();
+            debug.drawGui();
             lightControls.drawGui();
             menu.drawGui();
         }
@@ -52,7 +54,7 @@ public class Gui implements IGuiInstance {
 
     @Override
     public boolean handleGuiInput(Scene scene, Window window) {
-         mouseDisplay.handleGuiInput(scene, window);
+         debug.handleGuiInput(scene, window);
         lightControls.handleGuiInput(scene, window);
         return true;
     }

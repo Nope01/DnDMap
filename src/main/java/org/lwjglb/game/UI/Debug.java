@@ -2,8 +2,6 @@ package org.lwjglb.game.UI;
 
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
@@ -11,12 +9,11 @@ import org.joml.Vector3i;
 import org.lwjglb.engine.IGuiInstance;
 import org.lwjglb.engine.MouseInput;
 import org.lwjglb.engine.Window;
-import org.lwjglb.engine.graph.Model;
 import org.lwjglb.engine.scene.Entity;
 import org.lwjglb.engine.scene.Hexagon;
 import org.lwjglb.engine.scene.Scene;
 
-public class MouseDisplay implements IGuiInstance {
+public class Debug implements IGuiInstance {
     private Vector2f mousePos;
     private Vector2f viewPos;
     private Vector2f resolution;
@@ -31,7 +28,7 @@ public class MouseDisplay implements IGuiInstance {
     private Vector3f camPos;
     private Vector3f viewVec;
 
-    public MouseDisplay(Scene scene) {
+    public Debug(Scene scene) {
         mousePos = new Vector2f();
         viewPos = new Vector2f();
         resolution = new Vector2f();
@@ -49,7 +46,7 @@ public class MouseDisplay implements IGuiInstance {
 
     @Override
     public void drawGui() {
-        ImGui.begin("Mouse Display");
+        ImGui.begin("Debug");
         ImGui.text("Selected pos");
         ImGui.button(String.valueOf("X:" + selectedPos.x));
         ImGui.button(String.valueOf("Y:" + selectedPos.y));
@@ -97,7 +94,7 @@ public class MouseDisplay implements IGuiInstance {
             if (this.selectedEntity instanceof Hexagon) {
                 this.selectedOffsetCoords = ((Hexagon) selectedEntity).getOffset();
                 this.selectedCubeCoords = ((Hexagon) selectedEntity).offsetToCubeCoords(this.selectedOffsetCoords);
-                this.neighbour = ((Hexagon)selectedEntity).getCubeNeighbour(this.selectedCubeCoords, 2);
+                this.neighbour = ((Hexagon)selectedEntity).getCubeNeighbour(this.selectedCubeCoords, Hexagon.N);
             }
         }
 

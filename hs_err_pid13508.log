@@ -39,7 +39,7 @@ The last pc belongs to native method entry point (kind = native) (printed below)
 Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
 j  imgui.ImGui.nSliderFloat(Ljava/lang/String;[FFFLjava/lang/String;)Z+0
 j  imgui.ImGui.sliderFloat(Ljava/lang/String;[FFFLjava/lang/String;)Z+6
-j  org.lwjglb.game.UI.MouseDisplay.drawGui()V+75
+j  org.lwjglb.game.UI.Debug.drawGui()V+75
 j  org.lwjglb.engine.graph.GuiRender.render(Lorg/lwjglb/engine/scene/Scene;)V+11
 j  org.lwjglb.engine.graph.Render.render(Lorg/lwjglb/engine/Window;Lorg/lwjglb/engine/scene/Scene;)V+32
 j  org.lwjglb.engine.Engine.run()V+252

@@ -13,7 +13,7 @@ import org.lwjglb.engine.scene.lights.SceneLights;
 import org.lwjglb.engine.scene.lights.SpotLight;
 import org.lwjglb.game.UI.Gui;
 import org.lwjglb.game.UI.LightControls;
-import org.lwjglb.game.UI.MouseDisplay;
+import org.lwjglb.game.UI.Debug;
 
 import java.lang.Math;
 import java.util.Collection;
@@ -26,21 +26,12 @@ public class Main implements IAppLogic, IGuiInstance {
     private static final float MOUSE_SENSITIVITY = 0.08f;
     private static final float MOVEMENT_SPEED = 0.02f;
     private static final float PAN_SPEED = 0.005f;
-    private static final int NUM_CHUNKS = 4;
 
-    private Entity cubeEntity1;
-    private Entity cubeEntity2;
-    private Entity treeEntity;
-    private Entity planeEntity;
-    private Entity hexagonEntity;
-    private Entity lineEntity;
     private Entity[][] gridEntity;
-    private Entity quadEntity;
-
     private Vector4f displInc = new Vector4f();
     private float rotation;
     private LightControls lightControls;
-    private MouseDisplay mouseDisplay;
+    private Debug debug;
     private Gui gui;
 
 
@@ -61,21 +52,6 @@ public class Main implements IAppLogic, IGuiInstance {
         Camera camera = scene.getCamera();
         camera.setPosition(3.5f, 10.0f, 5.0f);
         camera.setRotation(1.5f, 0.0f);
-
-        //Plane
-//        String quadModelId = "quad-model";
-//        Model quadModel = ModelLoader.loadModel("quad-model", "resources/models/quad/quad.obj",
-//                scene.getTextureCache());
-//        scene.addModel(quadModel);
-//
-//        quadEntity = new Entity("quad-entity", quadModel.getId());
-//        quadEntity.setScale(5.0f);
-//        scene.addEntity(quadEntity);
-
-        //Hexagon
-        Model hexagonModel = ModelLoader.loadModel("hexagon-model", "resources/models/hexagon/hexagon.obj",
-                scene.getTextureCache());
-        scene.addModel(hexagonModel);
 
         //Grid
         int numRows = 6;
