@@ -13,6 +13,7 @@ public class Hexagon extends Entity implements SceneObject{
     public static final int S = 3;
     public static final int SW = 4;
     public static final int NW = 5;
+    public static final float SIZE = 1.0f;
 
 
     private Vector2i offsetCoords;

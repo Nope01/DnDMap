@@ -4,8 +4,8 @@ import org.joml.*;
 
 public class Entity {
 
-    private final String id;
-    private final String modelId;
+    private String id;
+    private String modelId;
     private Matrix4f modelMatrix;
     private Vector3f position;
     private Quaternionf rotation;

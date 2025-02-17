@@ -20,11 +20,10 @@ import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.List;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+
 public class Main implements IAppLogic, IGuiInstance {
-
-
-
-    private Entity[][] gridEntity;
+    private Grid hexGrid;
     private Vector4f displInc = new Vector4f();
     private float rotation;
     private LightControls lightControls;
@@ -51,40 +50,9 @@ public class Main implements IAppLogic, IGuiInstance {
         camera.setRotation(1.5f, 0.0f);
 
         //Grid
-        int numRows = 6;
-        int numCols = 6;
-        float size = 1f;
+        hexGrid = new Grid(6, 6);
+        hexGrid.makeGrid(scene);
 
-        float width = 2*size;
-        float height = (float) (width * Math.sqrt(3) / 2);
-
-        float horizSpacing = 0.75f * width;
-        float vertSpacing = height;
-
-        gridEntity = new Entity[numRows][numCols];
-        for (int col = 0; col < numCols; col++) {
-            for (int row = 0; row < numRows; row++) {
-                float x, z;
-
-                if (col % 2 == 0) {
-                    z = row * vertSpacing;
-                }
-                else {
-                    z = row * vertSpacing + (height/2);
-                }
-                x = col * horizSpacing;
-
-                Model model = ModelLoader.loadModel("hex-" + row + "-" + col, "resources/models/hexagon/hexagon.obj",
-                        scene.getTextureCache());
-                scene.addModel(model);
-                Hexagon hexagon = new Hexagon("hex-" + row + "-" + col, model.getId(), new Vector2i(col, row));
-                //Entity entity = new Entity("hex-" + row + "-" + col, model.getId());
-
-                hexagon.setPosition(x, 0.0f, z);
-                gridEntity[row][col] = hexagon;
-                scene.addEntity(hexagon);
-            }
-        }
         //Lights
         SceneLights sceneLights = new SceneLights();
         sceneLights.getAmbientLight().setIntensity(0.3f);
@@ -117,7 +85,12 @@ public class Main implements IAppLogic, IGuiInstance {
                 Vector3f pos = scene.getSelectedEntity().getPosition();
                 pos.set(mouseInput.getRayIntersection(scene));
             }
+
         }
+        if (window.isKeyPressed(GLFW_KEY_SPACE)) {
+            hexGrid.redraw(scene, 3, 2);
+        }
+
 
         if (inputConsumed) {
             return;
