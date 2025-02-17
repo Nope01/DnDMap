@@ -16,16 +16,13 @@ import org.lwjglb.game.UI.LightControls;
 import org.lwjglb.game.UI.Debug;
 
 import java.lang.Math;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.List;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 public class Main implements IAppLogic, IGuiInstance {
 
-    private static final float MOUSE_SENSITIVITY = 0.08f;
-    private static final float MOVEMENT_SPEED = 0.02f;
-    private static final float PAN_SPEED = 0.005f;
+
 
     private Entity[][] gridEntity;
     private Vector4f displInc = new Vector4f();
@@ -110,44 +107,15 @@ public class Main implements IAppLogic, IGuiInstance {
 
     @Override
     public void input(Window window, Scene scene, long diffTimeMillis, boolean inputConsumed) {
-        float move = diffTimeMillis * MOVEMENT_SPEED;
         Camera camera = scene.getCamera();
-
-        if (window.isKeyPressed(GLFW_KEY_W)) {
-            camera.moveForward(move);
-        } else if (window.isKeyPressed(GLFW_KEY_S)) {
-            camera.moveBackwards(move);
-        }
-        if (window.isKeyPressed(GLFW_KEY_A)) {
-            camera.moveLeft(move);
-        } else if (window.isKeyPressed(GLFW_KEY_D)) {
-            camera.moveRight(move);
-        }
-        if (window.isKeyPressed(GLFW_KEY_Q)) {
-            camera.moveUp(move);
-        } else if (window.isKeyPressed(GLFW_KEY_E)) {
-            camera.moveDown(move);
-        }
+        camera.input(window, scene, diffTimeMillis, inputConsumed);
 
         MouseInput mouseInput = window.getMouseInput();
-        if (mouseInput.isRightButtonPressed()) {
-            Vector2f displVec = mouseInput.getDisplVec();
-            camera.addRotation((float) Math.toRadians(displVec.x * MOUSE_SENSITIVITY),
-                    (float) Math.toRadians(displVec.y * MOUSE_SENSITIVITY));
-        }
-        if (mouseInput.isMiddleButtonPressed()) {
-            Vector2f displVec = mouseInput.getDisplVec();
-            camera.addPosition(displVec.x * PAN_SPEED, displVec.y * PAN_SPEED);
-        }
 
         if (mouseInput.isLeftButtonPressed()) {
-            //System.out.println(selectEntity(window, scene, mouseInput.getMousePos()));
-
             if (selectEntity(window, scene, mouseInput.getMousePos())) {
                 Vector3f pos = scene.getSelectedEntity().getPosition();
-                Vector3f dir = new Vector3f(mouseInput.getDisplVec().y, 0, mouseInput.getDisplVec().x);
-                dir.div(50f);
-                pos.add(dir);
+                pos.set(mouseInput.getRayIntersection(scene));
             }
         }
 
@@ -158,11 +126,12 @@ public class Main implements IAppLogic, IGuiInstance {
 
     @Override
     public void update(Window window, Scene scene, long diffTimeMillis) {
-//        rotation += 1.5f;
-//        hexagonEntity.setRotation(1, 0, 0, (float) Math.toRadians(rotation));
         for (Model model: scene.getModelMap().values()) {
             for (Entity entity: model.getEntitiesList()) {
                 entity.updateModelMatrix();
+                if (entity instanceof Hexagon) {
+                    ((Hexagon) entity).update(window, scene, diffTimeMillis);
+                }
             }
         }
     }
@@ -191,18 +160,8 @@ public class Main implements IAppLogic, IGuiInstance {
         int wdwWidth = window.getWidth();
         int wdwHeight = window.getHeight();
 
-        float x = window.getMouseInput().getViewPos().x;
-        float y = window.getMouseInput().getViewPos().y;
-        float z = -1.0f;
-
-        Matrix4f invProjMatrix = scene.getProjection().getInvProjMatrix();
-        Vector4f mouseDir = new Vector4f(x, y, z, 1.0f);
-        mouseDir.mul(invProjMatrix);
-        mouseDir.z = -1.0f;
-        mouseDir.w = 0.0f;
-
-        Matrix4f invViewMatrix = scene.getCamera().getInvViewMatrix();
-        mouseDir.mul(invViewMatrix);
+        MouseInput mouseInput = window.getMouseInput();
+        Vector4f mouseDir = mouseInput.getMouseDir(scene);
 
         Vector4f min = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
         Vector4f max = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);

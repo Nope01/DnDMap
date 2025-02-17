@@ -1,8 +1,19 @@
 package org.lwjglb.engine.scene;
 
 import org.joml.*;
+import org.lwjglb.engine.MouseInput;
+import org.lwjglb.engine.Window;
 
-public class Camera {
+import java.lang.Math;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
+
+public class Camera implements SceneObject {
+
+    private static final float MOUSE_SENSITIVITY = 0.08f;
+    private static final float MOVEMENT_SPEED = 0.02f;
+    private static final float PAN_SPEED = 0.005f;
 
     private Vector3f direction;
     private Vector3f position;
@@ -100,4 +111,44 @@ public class Camera {
         return invViewMatrix;
     }
 
+    @Override
+    public void render() {
+
+    }
+
+    @Override
+    public void update(Window window, Scene scene, long diffTimeMillis) {
+
+    }
+
+    @Override
+    public void input(Window window, Scene scene, long diffTimeMillis, boolean inputConsumed) {
+        float move = diffTimeMillis * MOVEMENT_SPEED;
+        if (window.isKeyPressed(GLFW_KEY_W)) {
+            this.moveForward(move);
+        } else if (window.isKeyPressed(GLFW_KEY_S)) {
+            this.moveBackwards(move);
+        }
+        if (window.isKeyPressed(GLFW_KEY_A)) {
+            this.moveLeft(move);
+        } else if (window.isKeyPressed(GLFW_KEY_D)) {
+            this.moveRight(move);
+        }
+        if (window.isKeyPressed(GLFW_KEY_Q)) {
+            this.moveUp(move);
+        } else if (window.isKeyPressed(GLFW_KEY_E)) {
+            this.moveDown(move);
+        }
+
+        MouseInput mouseInput = window.getMouseInput();
+        if (mouseInput.isRightButtonPressed()) {
+            Vector2f displVec = mouseInput.getDisplVec();
+            this.addRotation((float) Math.toRadians(displVec.y * MOUSE_SENSITIVITY),
+                    (float) Math.toRadians(displVec.x * MOUSE_SENSITIVITY));
+        }
+        if (mouseInput.isMiddleButtonPressed()) {
+            Vector2f displVec = mouseInput.getDisplVec();
+            this.addPosition(displVec.y * PAN_SPEED, displVec.x * PAN_SPEED);
+        }
+    }
 }

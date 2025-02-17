@@ -1,6 +1,7 @@
 package org.lwjglb.engine;
 
-import org.joml.Vector2f;
+import org.joml.*;
+import org.lwjglb.engine.scene.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -14,14 +15,17 @@ public class MouseInput {
     private boolean middleButtonPressed;
     private Vector2f previousPos;
     private Vector2f windowSize;
-    private Vector2f viewPos;
+    private Vector3f ndcPos;
+    private Vector3f worldPos;
 
     public MouseInput(Window window, long windowHandle) {
         previousPos = new Vector2f(-1, -1);
         mousePos = new Vector2f();
         displVec = new Vector2f();
         windowSize = new Vector2f();
-        viewPos = new Vector2f();
+        ndcPos = new Vector3f();
+        worldPos = new Vector3f();
+
         leftButtonPressed = false;
         rightButtonPressed = false;
         middleButtonPressed = false;
@@ -50,44 +54,6 @@ public class MouseInput {
         });
     }
 
-    public Vector2f getMousePos() {
-        return mousePos;
-    }
-
-    public Vector2f getWindowSize() {
-        return windowSize;
-    }
-
-    public Vector2f getViewPos() {
-        return viewPos;
-    }
-
-    public Vector2f getDisplVec() {
-        return displVec;
-    }
-
-    public void input() {
-        displVec.x = 0;
-        displVec.y = 0;
-        if (previousPos.x > 0 && previousPos.y > 0 && inWindow) {
-            double deltax = mousePos.x - previousPos.x;
-            double deltay = mousePos.y - previousPos.y;
-            boolean rotateX = deltax != 0;
-            boolean rotateY = deltay != 0;
-            if (rotateX) {
-                displVec.y = (float) deltax;
-            }
-            if (rotateY) {
-                displVec.x = (float) deltay;
-            }
-        }
-        previousPos.x = mousePos.x;
-        previousPos.y = mousePos.y;
-
-        viewPos.x = (2*(mousePos.x - 0)/(windowSize.x - 0))-1;
-        viewPos.y = -(2*(mousePos.y - 0)/(windowSize.y - 0))+1;
-    }
-
     public boolean isLeftButtonPressed() {
         return leftButtonPressed;
     }
@@ -98,5 +64,79 @@ public class MouseInput {
 
     public boolean isMiddleButtonPressed() {
         return middleButtonPressed;
+    }
+
+    public Vector2f getMousePos() {
+        return mousePos;
+    }
+
+    public Vector2f getWindowSize() {
+        return windowSize;
+    }
+
+    public Vector3f getNdcPos() {
+        ndcPos.x = (2*(mousePos.x)/(windowSize.x))-1;
+        ndcPos.y = -(2*(mousePos.y)/(windowSize.y))+1;
+        ndcPos.z = -1.0f;
+        return ndcPos;
+    }
+
+    public Vector4f getMouseDir(Scene scene) {
+        float x = getNdcPos().x;
+        float y = getNdcPos().y;
+        float z = -1.0f;
+
+        Matrix4f invProjMatrix = scene.getProjection().getInvProjMatrix();
+        Vector4f dir = new Vector4f(x, y, z, 1.0f);
+        dir.mul(invProjMatrix);
+        dir.z = -1.0f;
+        dir.w = 0.0f;
+
+        Matrix4f invViewMatrix = scene.getCamera().getInvViewMatrix();
+        dir.mul(invViewMatrix);
+        return dir;
+    }
+
+    //Intersects with 0,0,0 plane
+    public Vector3f getRayIntersection(Scene scene) {
+        Vector4f dir = getMouseDir(scene);
+        Vector3f rayDir = new Vector3f(
+                dir.x, dir.y, dir.z
+        );
+
+        Vector3f center = scene.getCamera().getPosition();
+        Vector3f point = new Vector3f(0.0f, 0.0f, 0.0f);
+        Vector3f normal = new Vector3f(0.0f, 1.0f, 0.0f);
+        float f = Intersectionf.intersectRayPlane(center, rayDir, point, normal, 0.5f);
+
+        //useful math for calculating intersection
+        Vector3f intersectionPoint = new Vector3f(rayDir).mul(f).add(center);
+        return intersectionPoint;
+    }
+
+
+    public Vector2f getDisplVec() {
+        return displVec;
+    }
+
+    public void input(Scene scene) {
+        displVec.x = 0;
+        displVec.y = 0;
+        if (previousPos.x > 0 && previousPos.y > 0 && inWindow) {
+            double deltax = mousePos.x - previousPos.x;
+            double deltay = mousePos.y - previousPos.y;
+            boolean rotateX = deltax != 0;
+            boolean rotateY = deltay != 0;
+            if (rotateX) {
+                displVec.x = (float) deltax;
+            }
+            if (rotateY) {
+                displVec.y = (float) deltay;
+            }
+        }
+        previousPos.x = mousePos.x;
+        previousPos.y = mousePos.y;
+        ndcPos = getNdcPos();
+        worldPos = getRayIntersection(scene);
     }
 }

@@ -1,11 +1,11 @@
 package org.lwjglb.engine.scene;
 
-import org.joml.Vector2f;
-import org.joml.Vector2i;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
+import org.joml.*;
+import org.lwjglb.engine.Window;
 
-public class Hexagon extends Entity {
+import java.lang.Math;
+
+public class Hexagon extends Entity implements SceneObject{
 
     public static final int N = 0;
     public static final int NE = 1;
@@ -18,6 +18,7 @@ public class Hexagon extends Entity {
     private Vector2i offsetCoords;
     private Vector3i axialCoords;
     private Vector3i[] cubeDirectionVectors;
+    private float rotation;
 
     public Hexagon(String id, String modelId) {
         super(id, modelId);
@@ -41,6 +42,21 @@ public class Hexagon extends Entity {
                4  3  2
                  */
         };
+    }
+
+    @Override
+    public void render() {
+
+    }
+
+    @Override
+    public void update(Window window, Scene scene, long diffTimeMillis) {
+    }
+
+    @Override
+    public void input(Window window, Scene scene, long diffTimeMillis, boolean inputConsumed) {
+
+
     }
 
     public Vector2i getOffset() {

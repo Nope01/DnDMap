@@ -70,7 +70,7 @@ public class Engine {
 //            }
 
             if (targetFps <= 0 || deltaFps >= 1) {
-                window.getMouseInput().input();
+                window.getMouseInput().input(scene);
                 boolean inputConsumed = iGuiInstance != null && iGuiInstance.handleGuiInput(scene, window);
                 appLogic.input(window, scene, now - initialTime, inputConsumed);
             }

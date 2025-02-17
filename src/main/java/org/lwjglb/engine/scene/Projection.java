@@ -5,8 +5,8 @@ import org.joml.Matrix4f;
 public class Projection {
 
     private static final float FOV = (float) Math.toRadians(60.0f);
-    private static final float Z_FAR = 1000.f;
-    private static final float Z_NEAR = 0.01f;
+    private static final float Z_FAR = 100.f;
+    private static final float Z_NEAR = 1f;
 
     private Matrix4f projMatrix;
     private Matrix4f invProjMatrix;
@@ -26,7 +26,8 @@ public class Projection {
     }
 
     public void updateProjMatrix(int width, int height) {
-        projMatrix.setPerspective(FOV, (float) width / height, Z_NEAR, Z_FAR);
+        float aspectRatio = (float) width / height;
+        projMatrix.setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
         invProjMatrix.set(projMatrix).invert();
     }
 }

@@ -15,7 +15,8 @@ import org.lwjglb.engine.scene.Scene;
 
 public class Debug implements IGuiInstance {
     private Vector2f mousePos;
-    private Vector2f viewPos;
+    private Vector3f ndcPos;
+    private Vector3f worldPos;
     private Vector2f resolution;
     private Vector2f displVec;
 
@@ -30,9 +31,10 @@ public class Debug implements IGuiInstance {
 
     public Debug(Scene scene) {
         mousePos = new Vector2f();
-        viewPos = new Vector2f();
+        ndcPos = new Vector3f();
         resolution = new Vector2f();
         displVec = new Vector2f();
+        worldPos = new Vector3f();
 
         selectedPos = new Vector3f();
         selectedOffsetCoords = new Vector2i();
@@ -52,14 +54,15 @@ public class Debug implements IGuiInstance {
         ImGui.button(String.valueOf("Y:" + selectedPos.y));
         ImGui.button(String.valueOf("Z:" + selectedPos.z));
         ImGui.separator();
-        ImGui.text("Camera pos");
-        ImGui.button(String.valueOf("X:" + camPos.x()));
-        ImGui.button(String.valueOf("Y:" + camPos.y()));
-        ImGui.button(String.valueOf("Z:" + camPos.z()));
+        ImGui.text("world pos");
+        ImGui.button(String.valueOf("X:" + worldPos.x()));
+        ImGui.button(String.valueOf("Y:" + worldPos.y()));
+        ImGui.button(String.valueOf("Z:" + worldPos.z()));
         ImGui.separator();
-        ImGui.text("Offset coords");
-        ImGui.button(String.valueOf("X:" + selectedOffsetCoords.x()));
-        ImGui.button(String.valueOf("Y:" + selectedOffsetCoords.y()));
+        ImGui.text("NDC coords");
+        ImGui.button(String.valueOf("X:" + ndcPos.x()));
+        ImGui.button(String.valueOf("Y:" + ndcPos.y()));
+        ImGui.button(String.valueOf("Z:" + ndcPos.z()));
         ImGui.separator();
         ImGui.text("Cube coords");
         ImGui.button(String.valueOf("X:" + selectedCubeCoords.x()));
@@ -100,9 +103,10 @@ public class Debug implements IGuiInstance {
 
         this.mousePos = mousePos;
         this.resolution = mouseInput.getWindowSize();
-        this.viewPos = mouseInput.getViewPos();
+        this.ndcPos = mouseInput.getNdcPos();
         this.displVec = mouseInput.getDisplVec();
         this.camPos = scene.getCamera().getPosition();
+        this.worldPos = mouseInput.getRayIntersection(scene);
 
         return consumed;
     }
