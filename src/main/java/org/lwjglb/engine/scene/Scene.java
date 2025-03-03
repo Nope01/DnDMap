@@ -27,12 +27,15 @@ public class Scene {
     }
 
     public void addEntity(Entity entity) {
+        if (entity.getParent() == null) {
+
+        }
         String modelId = entity.getModelId();
         Model model = modelMap.get(modelId);
         if (model == null) {
             throw new RuntimeException("Could not find model [" + modelId + "]");
         }
-        model.getEntitiesList().add(entity);
+        model.getEntitiesList().addAll(entity.getAllEntities());
     }
 
     public void removeEntity(Entity entity) {
